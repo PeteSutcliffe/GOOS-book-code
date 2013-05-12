@@ -1,5 +1,4 @@
-﻿using System.Threading;
-using NUnit.Framework;
+﻿using NUnit.Framework;
 using White.Core;
 
 namespace AuctionSniper.Tests.Acceptance
@@ -21,9 +20,31 @@ namespace AuctionSniper.Tests.Acceptance
         {
             _auction.StartSellingItem();
             _application.StartBiddingIn(_auction);
-            _auction.HasReceivedJoinRequestFromSniper();
+            _auction.HasReceivedJoinRequestFrom(ApplicationRunner.SniperXmppId);
             _auction.AnnounceClosed();
             _application.ShowsSniperHasLostAuction();
+        }
+
+        [Test]
+        public void SniperMakesAHigherBidButLoses()
+        {
+            _auction.StartSellingItem();
+            _application.StartBiddingIn(_auction);
+            _auction.HasReceivedJoinRequestFrom(ApplicationRunner.SniperXmppId);
+
+            _auction.ReportPrice(1000, 98, "other bidder");
+            _application.HasShownSniperIsBidding();
+
+            _auction.HasReceivedBid(1098, ApplicationRunner.SniperXmppId);
+
+            _auction.AnnounceClosed();
+            _application.ShowsSniperHasLostAuction();
+        }
+
+        [TestFixtureTearDown]
+        public void FixtureTearDown()
+        {
+            _smppServer.Close();
         }
 
         [TearDown]
@@ -31,7 +52,6 @@ namespace AuctionSniper.Tests.Acceptance
         {
             _auction.Stop();
             _application.Stop();
-            _smppServer.Close();
         }
     }
 }

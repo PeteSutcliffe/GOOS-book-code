@@ -1,5 +1,7 @@
 ﻿using System;
 using AuctionSniper.XMPP;
+using NUnit.Framework;
+using NUnit.Framework.Constraints;
 
 namespace AuctionSniper.Tests.Acceptance
 {
@@ -12,13 +14,14 @@ namespace AuctionSniper.Tests.Acceptance
             _messages.Add(message);
         }
 
-        public void ReceivesAMessage()
+        public void ReceivesAMessage(IResolveConstraint messageMatcher)
         {
             Message message;
             if (!_messages.TryTake(out message, 5000))
             {
                 throw new Exception("Message did not arrive");
             }
+            //Assert.That(message.Body, messageMatcher);
         }
     }
 }

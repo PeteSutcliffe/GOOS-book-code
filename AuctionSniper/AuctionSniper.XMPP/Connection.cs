@@ -48,8 +48,7 @@ namespace AuctionSniper.XMPP
                     GetChatManager().ReceiveChat(extension.MessageFrom);
                     break;
                 case MessageInfo.MessageTypes.Message:
-                    _chatManager.MessageReceived(new Message());
-                    //_chatManager.MessageReceived(new Message(message.Body.ToString()));
+                    _chatManager.MessageReceived(new Message(message.Body.ToString()));
                     break;
             }
 

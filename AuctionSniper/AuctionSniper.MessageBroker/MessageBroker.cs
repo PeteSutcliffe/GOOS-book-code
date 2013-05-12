@@ -59,7 +59,8 @@ namespace AuctionSniper.MessageBroker
 
                 var extension = message.DeserializeExtension();
 
-                Console.WriteLine("message received, from: {0}, recipient: {1}, message type {2}", extension.MessageFrom, extension.MessageTo, extension.MessageType);
+                Console.WriteLine("message received, from: {0}, recipient: {1}, message type: {2}, message body: {3}", 
+                    extension.MessageFrom, extension.MessageTo, extension.MessageType, message.Body);
 
                 var targetQueue = GetTargetQueue(extension.MessageTo);
                 targetQueue.Send(message);

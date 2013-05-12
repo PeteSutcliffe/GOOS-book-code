@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Windows;
 using AuctionSniper.XMPP;
 
 namespace AuctionSniper.UI.Wpf
@@ -7,7 +6,7 @@ namespace AuctionSniper.UI.Wpf
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class SniperWindow
+    public partial class SniperWindow : IAuctionEventListener
     {
         private const int ArgHostName = 0;
         private const int ArgUserName = 1;
@@ -31,13 +30,19 @@ namespace AuctionSniper.UI.Wpf
             var connection = ConnectTo(hostName, userName);
 
             var chat = connection.GetChatManager().CreateChat(
-                AuctionId(itemId), (c, m) =>
-                    {
-                        this.Dispatcher.BeginInvoke((Action)delegate { SniperStatus.Text = "Lost"; });
-                        SniperStatus.Text = "Lost"; 
-                    }
+                AuctionId(itemId), new AuctionMessageTranslator(this).ProcessMessage
                 );
-            chat.SendMessage(new Message());
+            chat.SendMessage(new Message(ApplicationConstants.JoinCommandFormat));
+        }
+
+        public void AuctionClosed()
+        {
+            Dispatcher.BeginInvoke((Action)delegate { SniperStatus.Text = ApplicationConstants.StatusLost; });
+        }
+
+        public void CurrentPrice(int price, int increment)
+        {
+            
         }
 
         private static Connection ConnectTo(string hostName, string userName)
@@ -55,12 +60,7 @@ namespace AuctionSniper.UI.Wpf
         private SniperWindow()
         {
             InitializeComponent();
-            SniperStatus.Text = "Joining";
-        }
-
-        private void Button_Click(object sender, RoutedEventArgs e)
-        {
-            SniperStatus.Text = "Clicked";
+            SniperStatus.Text = ApplicationConstants.StatusJoining;
         }
     }
 }

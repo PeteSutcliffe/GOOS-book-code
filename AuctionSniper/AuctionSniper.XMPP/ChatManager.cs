@@ -64,7 +64,7 @@ namespace AuctionSniper.XMPP
                 throw new InvalidOperationException("Chat already exists");
             }
 
-            _chat = new Chat(this);
+            _chat = new Chat(this, messageFrom);
             _chatListeners.ForEach(c => c(_chat));
         }
 

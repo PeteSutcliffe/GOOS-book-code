@@ -1,5 +1,7 @@
-﻿using System;
+﻿using AuctionSniper.UI.Wpf;
 using AuctionSniper.XMPP;
+using NUnit.Framework;
+using NUnit.Framework.Constraints;
 
 namespace AuctionSniper.Tests.Acceptance
 {
@@ -38,19 +40,37 @@ namespace AuctionSniper.Tests.Acceptance
             });
         }
 
-        public void HasReceivedJoinRequestFromSniper()
+        public void HasReceivedJoinRequestFrom(string sniperId)
         {
-            _messageListener.ReceivesAMessage();
+            ReceivesAMessageMatching(sniperId, Is.EqualTo(ApplicationConstants.JoinCommandFormat));
         }
 
         public void AnnounceClosed()
         {
-            _currentChat.SendMessage(new Message());
+            _currentChat.SendMessage(ApplicationConstants.CloseFormat);
         }
 
         public void Stop()
         {
             _connection.Discounnect();
+        }
+
+        public void ReportPrice(int price, int increment, string bidder)
+        {
+            _currentChat.SendMessage(string.Format("SOLVersion: 1.1; Event: PRICE; CurrentPrice: {0}; Increment: {1}; Bidder: {2}",
+                price, increment, bidder));
+        }
+
+        public void HasReceivedBid(int bid, string sniperId)
+        {
+            var equalConstraint = Is.EqualTo(string.Format(ApplicationConstants.BidFormat, bid));
+            ReceivesAMessageMatching(sniperId, equalConstraint);
+        }
+
+        private void ReceivesAMessageMatching(string sniperId, IResolveConstraint messageMatcher)
+        {
+            _messageListener.ReceivesAMessage(messageMatcher);
+            Assert.That(_currentChat.Participant, Is.StringContaining(sniperId));
         }
     }
 }
