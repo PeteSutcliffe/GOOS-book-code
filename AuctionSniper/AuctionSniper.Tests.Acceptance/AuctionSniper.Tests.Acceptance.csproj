@@ -66,6 +66,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ApplicationRunner.cs" />
     <Compile Include="ArrayBlockingQueue.cs" />
     <Compile Include="AuctionSniperEndToEndTests.cs" />
     <Compile Include="FakeAuctionServer.cs" />

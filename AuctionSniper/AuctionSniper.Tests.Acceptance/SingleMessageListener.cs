@@ -10,18 +10,15 @@ namespace AuctionSniper.Tests.Acceptance
         public void ProcessMessage(Chat chat, Message message)
         {
             _messages.Add(message);
-            Console.WriteLine("Message added to queue");
         }
 
         public void ReceivesAMessage()
         {
-            Console.WriteLine("Checking Queue");
             Message message;
             if (!_messages.TryTake(out message, 5000))
             {
                 throw new Exception("Message did not arrive");
             }
-            Console.WriteLine("Found message");
         }
     }
 }

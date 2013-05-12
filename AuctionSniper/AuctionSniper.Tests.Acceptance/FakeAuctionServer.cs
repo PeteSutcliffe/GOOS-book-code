@@ -33,7 +33,6 @@ namespace AuctionSniper.Tests.Acceptance
             _connection.Connect();
             _connection.GetChatManager().AddChatListener(chat =>
             {
-                Console.WriteLine("Create chat received");
                 _currentChat = chat;
                 _currentChat.AddMessageListener(_messageListener.ProcessMessage);
             });
@@ -46,7 +45,6 @@ namespace AuctionSniper.Tests.Acceptance
 
         public void AnnounceClosed()
         {
-            Console.WriteLine("Closing auction");
             _currentChat.SendMessage(new Message());
         }
 

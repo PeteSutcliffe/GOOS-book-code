@@ -1,8 +1,6 @@
-﻿using System.Diagnostics;
-using System.Threading;
+﻿using System.Threading;
 using NUnit.Framework;
 using White.Core;
-using White.Core.UIItems;
 
 namespace AuctionSniper.Tests.Acceptance
 {
@@ -34,31 +32,6 @@ namespace AuctionSniper.Tests.Acceptance
             _auction.Stop();
             _application.Stop();
             _smppServer.Close();
-        }
-    }
-
-    internal class ApplicationRunner
-    {
-        private Application _application;
-        
-
-        public void StartBiddingIn(FakeAuctionServer auction)
-        {
-            _application = Application.Launch(
-                new ProcessStartInfo("AuctionSniper.UI.Wpf.exe",
-                                     string.Format("broker_channel sniper {0}", auction.ItemId)));
-        }
-
-        public void Stop()
-        {
-            _application.Close();
-        }
-
-        public void ShowsSniperHasLostAuction()
-        {
-            var window = _application.GetWindow("MainWindow");
-            var label = window.Get<WPFLabel>("SniperStatus");
-            Assert.That(label.Text, Is.EqualTo("Lost"));
         }
     }
 }
