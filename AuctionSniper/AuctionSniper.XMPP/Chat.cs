@@ -23,7 +23,8 @@ namespace AuctionSniper.XMPP
 
         public void AddMessageListener(Action<Chat, Message> messageListener)
         {
-            _messageListeners.Add(messageListener);
+            if(messageListener != null)
+                _messageListeners.Add(messageListener);
         }
 
         internal void MessageReceived(Message message)

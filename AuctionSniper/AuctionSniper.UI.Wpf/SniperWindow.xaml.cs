@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Windows;
 using AuctionSniper.XMPP;
 
 namespace AuctionSniper.UI.Wpf
@@ -13,7 +14,12 @@ namespace AuctionSniper.UI.Wpf
 
         public void ShowStatus(string status)
         {
-            Dispatcher.BeginInvoke((Action)delegate { SniperStatus.Text = status; });
+            Dispatcher.BeginInvoke((Action)delegate { SniperStatus.Text += status; });
+        }
+
+        public void ShowAlert(string status)
+        {
+            MessageBox.Show(status);
         }
     }
 }

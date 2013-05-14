@@ -53,6 +53,9 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
     <Prefer32Bit>true</Prefer32Bit>
   </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject>AuctionSniper.UI.Wpf.App</StartupObject>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -82,7 +85,10 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="ApplicationConstants.cs" />
+    <Compile Include="AppMain.cs" />
     <Compile Include="AuctionMessageTranslator.cs" />
+    <Compile Include="IAuction.cs" />
+    <Compile Include="Sniper.cs" />
     <Compile Include="IAuctionEventListener.cs" />
     <Compile Include="SniperWindow.xaml.cs">
       <DependentUpon>SniperWindow.xaml</DependentUpon>

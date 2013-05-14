@@ -44,14 +44,14 @@ namespace AuctionSniper.Tests.Acceptance
         [TestFixtureTearDown]
         public void FixtureTearDown()
         {
-            _smppServer.Close();
+            //_smppServer.Close();
         }
 
         [TearDown]
         public void TearDown()
         {
             _auction.Stop();
-            _application.Stop();
+            //_application.Stop();
         }
     }
 }
