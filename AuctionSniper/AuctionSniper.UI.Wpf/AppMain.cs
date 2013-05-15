@@ -58,14 +58,8 @@ namespace AuctionSniper.UI.Wpf
             var chat = _connection.GetChatManager()
                                  .CreateChat(AuctionId(itemId), null);
 
-            var file = File.CreateText(@"D:\messageListener.txt");
-            
-            chat.AddMessageListener((c, m) =>
-                {
-                    file.WriteLine("message");
-                    file.Flush();
-                    new AuctionMessageTranslator(new Sniper(new NullAuction(chat), this)).ProcessMessage(c, m);
-                }
+            chat.AddMessageListener(
+                    new AuctionMessageTranslator(new Sniper(new NullAuction(chat), this)).ProcessMessage
                 );
 
             chat.SendMessage(new Message(ApplicationConstants.JoinCommandFormat));

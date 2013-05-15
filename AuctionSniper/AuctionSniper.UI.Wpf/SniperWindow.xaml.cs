@@ -14,12 +14,7 @@ namespace AuctionSniper.UI.Wpf
 
         public void ShowStatus(string status)
         {
-            Dispatcher.BeginInvoke((Action)delegate { SniperStatus.Text += status; });
-        }
-
-        public void ShowAlert(string status)
-        {
-            MessageBox.Show(status);
+            Dispatcher.BeginInvoke((Action)delegate { SniperStatus.Text = status; });
         }
     }
 }

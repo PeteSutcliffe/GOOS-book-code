@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Messaging;
-using System.Runtime.Serialization.Formatters.Binary;
 
 namespace AuctionSniper.XMPP
 {
@@ -23,25 +21,6 @@ namespace AuctionSniper.XMPP
         {
             _connection = connection;
             _inputChannel = inputChannel;
-            _inputChannel.ReceiveCompleted += ReceiveMessage;
-        }
-
-        void ReceiveMessage(object sender, ReceiveCompletedEventArgs e)
-        {
-            var message = _inputChannel.EndReceive(e.AsyncResult);
-            var bf = new BinaryFormatter();            
-            var ms = new MemoryStream(message.Extension);
-            var extension = (MessageInfo)bf.Deserialize(ms);
-
-            switch (extension.MessageType)
-            {
-                case MessageInfo.MessageTypes.CreateChat:
-                    CreateChatFrom(extension.MessageFrom);
-                    break;
-                case MessageInfo.MessageTypes.Message:
-                    _chat.MessageReceived(new Message(message.Body.ToString()));
-                    break;
-            }
         }
 
         public void AddChatListener(Action<Chat> chatCreated)
