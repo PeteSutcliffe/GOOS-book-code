@@ -25,8 +25,6 @@ namespace AuctionSniper.UI.Wpf
             {
                 _listener.CurrentPrice(int.Parse(@event["CurrentPrice"]), int.Parse(@event["Increment"]));
             }
-
-            _listener.AuctionClosed();
         }
 
         private Dictionary<string, string> UnpackEventFrom(Message message)

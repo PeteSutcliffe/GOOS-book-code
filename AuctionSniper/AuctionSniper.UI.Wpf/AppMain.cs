@@ -1,4 +1,6 @@
 ﻿using System;
+using System.IO;
+
 using AuctionSniper.XMPP;
 
 namespace AuctionSniper.UI.Wpf
@@ -6,6 +8,8 @@ namespace AuctionSniper.UI.Wpf
     public class AppMain : ISniperListener
     {
         private readonly SniperWindow _ui;
+
+        private Connection _connection;
 
         private const int ArgHostName = 0;
         private const int ArgUserName = 1;
@@ -27,11 +31,12 @@ namespace AuctionSniper.UI.Wpf
         {
             _ui = new SniperWindow();
             _ui.Show();
+            _ui.Closing += UiClosing;
         }
 
-        public void AuctionClosed()
+        void UiClosing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            _ui.ShowStatus(ApplicationConstants.StatusLost);
+            _connection.Disconnect();
         }
 
         private static Connection ConnectTo(string hostName, string userName)
@@ -48,13 +53,20 @@ namespace AuctionSniper.UI.Wpf
 
         private void JoinAuction(string hostName, string userName, string itemId)
         {
-            var connection = ConnectTo(hostName, userName);
+            _connection = ConnectTo(hostName, userName);
 
-            var chat = connection.GetChatManager()
+            var chat = _connection.GetChatManager()
                                  .CreateChat(AuctionId(itemId), null);
+
+            var file = File.CreateText(@"D:\messageListener.txt");
             
-            chat.AddMessageListener(
-                new AuctionMessageTranslator(new Sniper(new NullAuction(chat), this)).ProcessMessage);
+            chat.AddMessageListener((c, m) =>
+                {
+                    file.WriteLine("message");
+                    file.Flush();
+                    new AuctionMessageTranslator(new Sniper(new NullAuction(chat), this)).ProcessMessage(c, m);
+                }
+                );
 
             chat.SendMessage(new Message(ApplicationConstants.JoinCommandFormat));
         }
@@ -88,6 +100,7 @@ namespace AuctionSniper.UI.Wpf
             catch (Exception)
             {
                 //todo: how to show error?
+                throw;
             }
         }
     }

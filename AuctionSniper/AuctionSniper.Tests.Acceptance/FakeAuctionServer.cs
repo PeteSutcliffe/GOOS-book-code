@@ -52,7 +52,7 @@ namespace AuctionSniper.Tests.Acceptance
 
         public void Stop()
         {
-            _connection.Discounnect();
+            _connection.Disconnect();
         }
 
         public void ReportPrice(int price, int increment, string bidder)

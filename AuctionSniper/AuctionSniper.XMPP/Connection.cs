@@ -6,6 +6,8 @@ namespace AuctionSniper.XMPP
 {
     public class Connection
     {
+        private readonly string _userName;
+
         private readonly string _inputChannelName;
 
         private readonly MessageQueue _brokerChannel;
@@ -15,6 +17,7 @@ namespace AuctionSniper.XMPP
 
         public Connection(string hostName, string userName)
         {
+            _userName = userName;
             _inputChannelName = GetChannelName(userName);
             _brokerChannel = new MessageQueue(GetChannelName(hostName));
         }
@@ -39,7 +42,7 @@ namespace AuctionSniper.XMPP
 
         private void OnMessageReceived(object sender, ReceiveCompletedEventArgs results)
         {
-            var message = _inputChannel.EndReceive(results.AsyncResult);
+            var message = _inputChannel.EndReceive(results.AsyncResult);            
             var extension = message.DeserializeExtension();
 
             switch (extension.MessageType)
@@ -48,7 +51,7 @@ namespace AuctionSniper.XMPP
                     GetChatManager().ReceiveChat(extension.MessageFrom);
                     break;
                 case MessageInfo.MessageTypes.Message:
-                    _chatManager.MessageReceived(new Message(message.Body.ToString()));
+                    GetChatManager().MessageReceived(new Message(message.Body.ToString()));
                     break;
             }
 
@@ -106,7 +109,7 @@ namespace AuctionSniper.XMPP
             _brokerChannel.Send(msmqMessage);
         }
 
-        public void Discounnect()
+        public void Disconnect()
         {
             _inputChannel.Close();
             _inputChannel = null;

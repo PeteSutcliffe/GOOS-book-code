@@ -24,7 +24,7 @@ namespace AuctionSniper.Tests.Unit
         public void NotifiesAuctionClosedWhenCloseMessageReceived()
         {
             //Act
-            _translator.ProcessMessage(_unusedChat, new Message("SOLVersion: 1.1; Event:Close;"));
+            _translator.ProcessMessage(_unusedChat, new Message("SOLVersion: 1.1; Event: CLOSE;"));
 
             //Assert
             _mock.Verify(m => m.AuctionClosed(), Times.Once());
