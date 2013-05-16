@@ -1,4 +1,4 @@
-﻿using AuctionSniper.UI.Wpf;
+﻿using AuctionSniper.Domain;
 using AuctionSniper.XMPP;
 using Moq;
 using NUnit.Framework;

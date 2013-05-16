@@ -18,6 +18,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{DDF514
 		.nuget\NuGet.targets = .nuget\NuGet.targets
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AuctionSniper.Domain", "AuctionSniper.Domain\AuctionSniper.Domain.csproj", "{EA86A6FD-38A3-48D9-8C45-DE434898D445}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -86,6 +88,16 @@ Global
 		{5C2222E0-EA52-42E6-9299-9C621B514755}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{5C2222E0-EA52-42E6-9299-9C621B514755}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{5C2222E0-EA52-42E6-9299-9C621B514755}.Release|x86.ActiveCfg = Release|Any CPU
+		{EA86A6FD-38A3-48D9-8C45-DE434898D445}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EA86A6FD-38A3-48D9-8C45-DE434898D445}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EA86A6FD-38A3-48D9-8C45-DE434898D445}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
+		{EA86A6FD-38A3-48D9-8C45-DE434898D445}.Debug|Mixed Platforms.Build.0 = Debug|x86
+		{EA86A6FD-38A3-48D9-8C45-DE434898D445}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{EA86A6FD-38A3-48D9-8C45-DE434898D445}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EA86A6FD-38A3-48D9-8C45-DE434898D445}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EA86A6FD-38A3-48D9-8C45-DE434898D445}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{EA86A6FD-38A3-48D9-8C45-DE434898D445}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{EA86A6FD-38A3-48D9-8C45-DE434898D445}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

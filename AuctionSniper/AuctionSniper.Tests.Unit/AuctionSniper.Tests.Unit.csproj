@@ -73,6 +73,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\AuctionSniper.Domain\AuctionSniper.Domain.csproj">
+      <Project>{EA86A6FD-38A3-48D9-8C45-DE434898D445}</Project>
+      <Name>AuctionSniper.Domain</Name>
+    </ProjectReference>
     <ProjectReference Include="..\AuctionSniper.UI.Wpf\AuctionSniper.UI.Wpf.csproj">
       <Project>{8d12e411-195b-4f7a-9b71-8b22943f6dc6}</Project>
       <Name>AuctionSniper.UI.Wpf</Name>

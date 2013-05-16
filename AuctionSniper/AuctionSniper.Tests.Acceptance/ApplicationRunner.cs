@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using AuctionSniper.Domain;
 using AuctionSniper.UI.Wpf;
 using NUnit.Framework;
 using White.Core;

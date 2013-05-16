@@ -1,14 +1,8 @@
-﻿namespace AuctionSniper.UI.Wpf
+﻿namespace AuctionSniper.Domain
 {
     public interface IAuctionEventListener
     {
         void AuctionClosed();
         void CurrentPrice(int price, int increment);
-    }
-
-    public interface ISniperListener
-    {
-        void SniperLost();
-        void SniperBidding();
     }
 }

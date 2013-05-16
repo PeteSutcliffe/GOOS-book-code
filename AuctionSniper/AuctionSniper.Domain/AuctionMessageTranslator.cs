@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using AuctionSniper.XMPP;
 
-namespace AuctionSniper.UI.Wpf
+namespace AuctionSniper.Domain
 {
     public class AuctionMessageTranslator
     {

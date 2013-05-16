@@ -1,4 +1,4 @@
-﻿namespace AuctionSniper.UI.Wpf
+﻿namespace AuctionSniper.Domain
 {
     public interface IAuction
     {

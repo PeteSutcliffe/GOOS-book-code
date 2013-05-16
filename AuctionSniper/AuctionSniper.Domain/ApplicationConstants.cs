@@ -1,6 +1,4 @@
-﻿using AuctionSniper.XMPP;
-
-namespace AuctionSniper.UI.Wpf
+﻿namespace AuctionSniper.Domain
 {
     public static class ApplicationConstants
     {

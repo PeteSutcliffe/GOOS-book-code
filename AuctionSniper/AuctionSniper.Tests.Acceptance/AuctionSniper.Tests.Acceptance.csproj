@@ -74,6 +74,10 @@
     <Compile Include="SingleMessageListener.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\AuctionSniper.Domain\AuctionSniper.Domain.csproj">
+      <Project>{EA86A6FD-38A3-48D9-8C45-DE434898D445}</Project>
+      <Name>AuctionSniper.Domain</Name>
+    </ProjectReference>
     <ProjectReference Include="..\AuctionSniper.MessageBroker\AuctionSniper.MessageBroker.csproj">
       <Project>{a6fd0cbe-7719-4ac5-868e-7d2e07328e4f}</Project>
       <Name>AuctionSniper.MessageBroker</Name>

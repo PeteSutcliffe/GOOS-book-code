@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using AuctionSniper.UI.Wpf;
+﻿using AuctionSniper.Domain;
 using Moq;
 using NUnit.Framework;
 
@@ -21,7 +16,7 @@ namespace AuctionSniper.Tests.Unit
         {
             _mockSniperListener = new Mock<ISniperListener>();
             _mockAuction = new Mock<IAuction>();
-            _sniper = new UI.Wpf.Sniper(_mockAuction.Object, _mockSniperListener.Object);
+            _sniper = new Sniper(_mockAuction.Object, _mockSniperListener.Object);
         }
 
         [Test]

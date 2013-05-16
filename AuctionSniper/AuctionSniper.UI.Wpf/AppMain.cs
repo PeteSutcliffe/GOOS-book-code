@@ -1,6 +1,5 @@
 ﻿using System;
-using System.IO;
-
+using AuctionSniper.Domain;
 using AuctionSniper.XMPP;
 
 namespace AuctionSniper.UI.Wpf
