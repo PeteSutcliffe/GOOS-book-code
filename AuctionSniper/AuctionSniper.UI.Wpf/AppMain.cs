@@ -57,11 +57,11 @@ namespace AuctionSniper.UI.Wpf
             var chat = _connection.GetChatManager()
                                  .CreateChat(AuctionId(itemId), null);
 
+            var auction = new XMPPAuction(chat);
             chat.AddMessageListener(
                     new AuctionMessageTranslator(new Sniper(new NullAuction(chat), this)).ProcessMessage
                 );
-
-            chat.SendMessage(new Message(ApplicationConstants.JoinCommandFormat));
+            auction.Join();
         }
 
         public void SniperLost()
