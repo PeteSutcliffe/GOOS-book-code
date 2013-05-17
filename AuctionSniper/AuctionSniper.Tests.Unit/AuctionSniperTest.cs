@@ -32,12 +32,12 @@ namespace AuctionSniper.Tests.Unit
             // An attempt to emulate the state tracking outlined in the book.
 
             string state = null;
-            _mockSniperListener.Setup(l => l.SniperBidding())
-                               .Callback(() => state = "bidding");
+            _mockSniperListener.Allow(l => l.SniperBidding(),
+                               () => state = "bidding");
 
-            _mockSniperListener.Setup(l => l.SniperLost())
-                               .Callback(() => 
-                                   Assert.That(state, Is.EqualTo("bidding")));
+            _mockSniperListener.RestrictState(l => l.SniperLost(),
+                               () => Assert.That(state, Is.EqualTo("bidding")));
+
             _sniper.CurrentPrice(123, 45, PriceSource.FromOtherBidder);
             _sniper.AuctionClosed();
 
@@ -68,11 +68,11 @@ namespace AuctionSniper.Tests.Unit
         {
             string state = null;
 
-            _mockSniperListener.Setup(l => l.SniperWinning())
-                               .Callback(() => state = "winning");
-            _mockSniperListener.Setup(l => l.SniperWon())
-                               .Callback(() =>
-                                         Assert.That(state, Is.EqualTo("winning")));
+            _mockSniperListener.Allow(l => l.SniperWinning(), 
+                () => state = "winning");
+
+            _mockSniperListener.RestrictState(l => l.SniperWon(),
+                               () => Assert.That(state, Is.EqualTo("winning")));
 
             _sniper.CurrentPrice(123, 45, PriceSource.FromSniper);
             _sniper.AuctionClosed();

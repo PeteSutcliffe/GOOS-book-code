@@ -68,6 +68,7 @@
     <Compile Include="AuctionMessageTranslatorTest.cs" />
     <Compile Include="AuctionSniperTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="StateExtensions.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
