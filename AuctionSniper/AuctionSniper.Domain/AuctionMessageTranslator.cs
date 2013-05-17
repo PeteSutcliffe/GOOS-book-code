@@ -26,7 +26,7 @@ namespace AuctionSniper.Domain
             }
             else if (type == "PRICE")
             {
-                _listener.CurrentPrice(@event.CurrentPrice, @event.Increment, PriceSource.FromOtherBidder);
+                _listener.CurrentPrice(@event.CurrentPrice, @event.Increment, @event.IsFrom(_sniperId));
             }
         }
 
@@ -88,6 +88,17 @@ namespace AuctionSniper.Domain
             static IEnumerable<string> FieldsIn(string messageBody)
             {
                 return messageBody.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
+            }
+
+            public PriceSource IsFrom(string sniperId)
+            {
+                return sniperId == Bidder() ? PriceSource.FromSniper : PriceSource.FromOtherBidder;
+
+            }
+
+            private string Bidder()
+            {
+                return Get("Bidder");
             }
         }        
     }

@@ -37,5 +37,12 @@ namespace AuctionSniper.Tests.Unit
             _mockAuction.Verify(a => a.Bid(price + increment), Times.Once());
             _mockSniperListener.Verify(l => l.SniperBidding(), Times.AtLeastOnce());
         }
+
+        [Test]
+        public void ReportsIsWinningWhenCurrentPriceComesFromSniper()
+        {
+            _sniper.CurrentPrice(123, 45, PriceSource.FromSniper);
+            _mockSniperListener.Verify(l => l.SniperWinning(), Times.AtLeastOnce());
+        }
     }
 }

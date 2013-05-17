@@ -22,6 +22,11 @@ namespace AuctionSniper.XMPP
             _brokerChannel = new MessageQueue(GetChannelName(hostName));
         }
 
+        public string User
+        {
+            get { return _userName; }
+        }
+
         private static string GetChannelName(string userName)
         {
             if (userName.Contains("private$"))

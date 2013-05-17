@@ -16,10 +16,18 @@
             _sniperListener.SniperLost();
         }
 
-        public void CurrentPrice(int price, int increment, PriceSource bidder)
+        public void CurrentPrice(int price, int increment, PriceSource priceSource)
         {
-            _auction.Bid(price + increment);
-            _sniperListener.SniperBidding();
+            switch (priceSource)
+            {
+                case PriceSource.FromSniper:
+                    _sniperListener.SniperWinning();
+                    break;
+                case PriceSource.FromOtherBidder:
+                    _auction.Bid(price + increment);
+                    _sniperListener.SniperBidding();
+                    break;
+            }
         }
     }
 }
