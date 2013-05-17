@@ -20,10 +20,28 @@ namespace AuctionSniper.Tests.Unit
         }
 
         [Test]
-        public void ReportsLostWhenAuctonLoses()
+        public void ReportsLostIfAuctionClosesImmediately()
         {
             _sniper.AuctionClosed();
             _mockSniperListener.Verify(v => v.SniperLost(), Times.AtLeastOnce());
+        }
+
+        [Test]
+        public void ReportsLostIfAuctionClosesWhenBidding()
+        {
+            // An attempt to emulate the state tracking outlined in the book.
+
+            string state = null;
+            _mockSniperListener.Setup(l => l.SniperBidding())
+                               .Callback(() => state = "bidding");
+
+            _mockSniperListener.Setup(l => l.SniperLost())
+                               .Callback(() => 
+                                   Assert.That(state, Is.EqualTo("bidding")));
+            _sniper.CurrentPrice(123, 45, PriceSource.FromOtherBidder);
+            _sniper.AuctionClosed();
+
+            _mockSniperListener.Verify(l => l.SniperLost(), Times.AtLeastOnce());
         }
 
         [Test]
@@ -43,6 +61,23 @@ namespace AuctionSniper.Tests.Unit
         {
             _sniper.CurrentPrice(123, 45, PriceSource.FromSniper);
             _mockSniperListener.Verify(l => l.SniperWinning(), Times.AtLeastOnce());
+        }
+
+        [Test]
+        public void ReportsWonIfAuctionClosesWhenWinning()
+        {
+            string state = null;
+
+            _mockSniperListener.Setup(l => l.SniperWinning())
+                               .Callback(() => state = "winning");
+            _mockSniperListener.Setup(l => l.SniperWon())
+                               .Callback(() =>
+                                         Assert.That(state, Is.EqualTo("winning")));
+
+            _sniper.CurrentPrice(123, 45, PriceSource.FromSniper);
+            _sniper.AuctionClosed();
+
+            _mockSniperListener.Verify(l => l.SniperWon(), Times.AtLeastOnce());
         }
     }
 }

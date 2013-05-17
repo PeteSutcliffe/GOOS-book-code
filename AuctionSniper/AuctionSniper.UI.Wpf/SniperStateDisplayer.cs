@@ -26,6 +26,11 @@ namespace AuctionSniper.UI.Wpf
             ShowStatus(ApplicationConstants.StatusWinning);
         }
 
+        public void SniperWon()
+        {
+            ShowStatus(ApplicationConstants.StatusWon);
+        }
+
         private void ShowStatus(string status)
         {
             _ui.ShowStatus(status);
