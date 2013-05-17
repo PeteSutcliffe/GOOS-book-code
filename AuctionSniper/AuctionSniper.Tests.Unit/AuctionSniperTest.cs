@@ -32,7 +32,7 @@ namespace AuctionSniper.Tests.Unit
             const int price = 1001;
             const int increment = 25;
 
-            _sniper.CurrentPrice(price, increment);
+            _sniper.CurrentPrice(price, increment, PriceSource.FromOtherBidder);
             
             _mockAuction.Verify(a => a.Bid(price + increment), Times.Once());
             _mockSniperListener.Verify(l => l.SniperBidding(), Times.AtLeastOnce());

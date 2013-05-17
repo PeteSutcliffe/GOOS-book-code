@@ -57,7 +57,7 @@ namespace AuctionSniper.UI.Wpf
                                  .CreateChat(AuctionId(itemId), null);
 
             var auction = new XMPPAuction(chat);
-            chat.AddMessageListener(new AuctionMessageTranslator(new Sniper(auction, new SniperStateDisplayer(_ui))).ProcessMessage);
+            chat.AddMessageListener(new AuctionMessageTranslator("", new Sniper(auction, new SniperStateDisplayer(_ui))).ProcessMessage);
             auction.Join();
         }
     }

@@ -6,10 +6,13 @@ namespace AuctionSniper.Domain
 {
     public class AuctionMessageTranslator
     {
+        private readonly string _sniperId;
+
         private readonly IAuctionEventListener _listener;
 
-        public AuctionMessageTranslator(IAuctionEventListener listener)
+        public AuctionMessageTranslator(string sniperId, IAuctionEventListener listener)
         {
+            _sniperId = sniperId;
             _listener = listener;
         }
 
@@ -23,7 +26,7 @@ namespace AuctionSniper.Domain
             }
             else if (type == "PRICE")
             {
-                _listener.CurrentPrice(@event.CurrentPrice, @event.Increment);
+                _listener.CurrentPrice(@event.CurrentPrice, @event.Increment, PriceSource.FromOtherBidder);
             }
         }
 

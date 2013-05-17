@@ -41,6 +41,24 @@ namespace AuctionSniper.Tests.Acceptance
             _application.ShowsSniperHasLostAuction();
         }
 
+        [Test]
+        public void SniperWinsAuctionByBiddingHigher()
+        {
+            _auction.StartSellingItem();
+            _application.StartBiddingIn(_auction);
+            _auction.HasReceivedJoinRequestFrom(ApplicationRunner.SniperXmppId);
+
+            _auction.ReportPrice(1000, 98, "other bidder");
+            _application.HasShownSniperIsBidding();
+
+            _auction.HasReceivedBid(1098, ApplicationRunner.SniperXmppId);
+            _auction.ReportPrice(1098, 97, ApplicationRunner.SniperXmppId);
+            _application.HasShownSniperIsWinning();
+
+            _auction.AnnounceClosed();
+            _application.ShowsSniperHasWonAuction();
+        }
+
         [TestFixtureTearDown]
         public void FixtureTearDown()
         {

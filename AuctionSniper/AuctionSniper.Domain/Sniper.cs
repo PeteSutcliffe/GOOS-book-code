@@ -16,7 +16,7 @@
             _sniperListener.SniperLost();
         }
 
-        public void CurrentPrice(int price, int increment)
+        public void CurrentPrice(int price, int increment, PriceSource bidder)
         {
             _auction.Bid(price + increment);
             _sniperListener.SniperBidding();

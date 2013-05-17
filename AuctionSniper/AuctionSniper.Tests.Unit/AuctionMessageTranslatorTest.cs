@@ -12,12 +12,14 @@ namespace AuctionSniper.Tests.Unit
         private IAuctionEventListener _listener;
         private Mock<IAuctionEventListener> _mock;
 
+        private const string SniperId = "sniper";
+
         [SetUp]
         public void Setup()
         {
             _mock = new Mock<IAuctionEventListener>();
             _listener = _mock.Object;
-            _translator = new AuctionMessageTranslator(_listener);
+            _translator = new AuctionMessageTranslator(SniperId, _listener);
         }
 
         [Test]
@@ -31,14 +33,25 @@ namespace AuctionSniper.Tests.Unit
         }
 
         [Test]
-        public void NotifiesBidDetailsWhenCurrentPriceMessageReceived()
+        public void NotifiesBidDetailsWhenCurrentPriceMessageReceivedFromOtherBidder()
         {
             //Act
             _translator.ProcessMessage(_unusedChat, 
                 new Message("SOLVersion: 1.1; Event: PRICE; CurrentPrice: 192; Increment: 7; Bidder: Someone else;"));
 
             //Assert
-            _mock.Verify(m => m.CurrentPrice(192, 7), Times.Once());
+            _mock.Verify(m => m.CurrentPrice(192, 7, PriceSource.FromOtherBidder), Times.Once());
+        }
+
+        [Test]
+        public void NotifiesBidDetailsWhenCurrentPriceMessageReceivedFromSniper()
+        {
+            //Act
+            _translator.ProcessMessage(_unusedChat, 
+                new Message(string.Format("SOLVersion: 1.1; Event: PRICE; CurrentPrice: 192; Increment: 7; Bidder: {0};", SniperId)));
+
+            //Assert
+            _mock.Verify(m => m.CurrentPrice(192, 7, PriceSource.FromSniper), Times.Once());
         }
     }
 }

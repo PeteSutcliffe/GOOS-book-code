@@ -27,16 +27,29 @@ namespace AuctionSniper.Tests.Acceptance
 
         public void ShowsSniperHasLostAuction()
         {
-            var window = _application.GetWindow("Auction Sniper Main");
-            var label = window.Get<WPFLabel>("SniperStatus");
-            Assert.That(label.Text, Is.EqualTo(ApplicationConstants.StatusLost));
+            HasShownSniperStatus(ApplicationConstants.StatusLost);
         }
 
         public void HasShownSniperIsBidding()
         {
+            HasShownSniperStatus(ApplicationConstants.StatusBidding);
+        }
+
+        public void HasShownSniperIsWinning()
+        {
+            HasShownSniperStatus(ApplicationConstants.StatusWinning);
+        }
+
+        public void ShowsSniperHasWonAuction()
+        {
+            HasShownSniperStatus(ApplicationConstants.StatusWon);
+        }        
+
+        private void HasShownSniperStatus(string status)
+        {
             var window = _application.GetWindow("Auction Sniper Main");
             var label = window.Get<WPFLabel>("SniperStatus");
-            Assert.That(label.Text, Is.EqualTo(ApplicationConstants.StatusBidding));
+            Assert.That(label.Text, Is.EqualTo(status));
         }
     }
 }
