@@ -15,28 +15,77 @@ namespace AuctionSniper.Domain
 
         public void ProcessMessage(Chat chat, Message message)
         {
-            var @event = UnpackEventFrom(message);
-            var type = @event["Event"];
+            var @event = AuctionEvent.From(message.Body);
+            var type = @event.Type;
             if (type == "CLOSE")
             {
                 _listener.AuctionClosed();
             }
             else if (type == "PRICE")
             {
-                _listener.CurrentPrice(int.Parse(@event["CurrentPrice"]), int.Parse(@event["Increment"]));
+                _listener.CurrentPrice(@event.CurrentPrice, @event.Increment);
             }
         }
 
-        private Dictionary<string, string> UnpackEventFrom(Message message)
+        private class AuctionEvent
         {
-            var @event = new Dictionary<string, string>();
+            private readonly Dictionary<string, string> _fields = new Dictionary<string, string>();
 
-            foreach (var element in message.Body.Split(new[] {';'}, StringSplitOptions.RemoveEmptyEntries))
+            public string Type
             {
-                var pair = element.Split(':');
-                @event.Add(pair[0].Trim(), pair[1].Trim());
+                get
+                {
+                    return Get("Event");
+                }
             }
-            return @event;
-        }
+
+            public int CurrentPrice
+            {
+                get
+                {
+                    return GetInt("CurrentPrice");
+                }
+            }
+
+            public int Increment
+            {
+                get
+                {
+                    return GetInt("Increment");
+                }
+            }
+
+            private int GetInt(string fieldName)
+            {
+                return int.Parse(Get(fieldName));
+            }
+
+            private string Get(string fieldName)
+            {
+                return _fields[fieldName];
+            }
+
+            private void AddField(string field)
+            {
+                var pair = field.Split(new[] { ':' }, StringSplitOptions.RemoveEmptyEntries);
+                _fields.Add(pair[0].Trim(), pair[1].Trim());
+            }
+
+            public static AuctionEvent From(string messageBody)
+            {
+                var @event = new AuctionEvent();
+                foreach (var field in FieldsIn(messageBody))
+                {
+                    @event.AddField(field);
+                }
+
+                return @event;
+            }
+
+            static IEnumerable<string> FieldsIn(string messageBody)
+            {
+                return messageBody.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
+            }
+        }        
     }
 }

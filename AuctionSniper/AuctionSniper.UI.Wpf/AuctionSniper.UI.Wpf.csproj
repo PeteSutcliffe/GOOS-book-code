@@ -85,6 +85,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="AppMain.cs" />
+    <Compile Include="SniperStateDisplayer.cs" />
     <Compile Include="SniperWindow.xaml.cs">
       <DependentUpon>SniperWindow.xaml</DependentUpon>
       <SubType>Code</SubType>

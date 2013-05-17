@@ -1,5 +1,4 @@
-﻿using System;
-using AuctionSniper.Domain;
+﻿using AuctionSniper.Domain;
 using AuctionSniper.XMPP;
 
 namespace AuctionSniper.UI.Wpf
@@ -58,56 +57,8 @@ namespace AuctionSniper.UI.Wpf
                                  .CreateChat(AuctionId(itemId), null);
 
             var auction = new XMPPAuction(chat);
-            chat.AddMessageListener(new AuctionMessageTranslator(new Sniper(new NullAuction(chat), new SniperStateDisplayer(_ui))).ProcessMessage);
+            chat.AddMessageListener(new AuctionMessageTranslator(new Sniper(auction, new SniperStateDisplayer(_ui))).ProcessMessage);
             auction.Join();
-        }
-    }
-
-    internal class SniperStateDisplayer : ISniperListener
-    {
-        private readonly SniperWindow _ui;
-
-        public SniperStateDisplayer(SniperWindow ui)
-        {
-            _ui = ui;
-        }
-
-        public void SniperLost()
-        {
-            ShowStatus(ApplicationConstants.StatusLost);
-        }
-
-        public void SniperBidding()
-        {
-            ShowStatus(ApplicationConstants.StatusBidding);
-        }
-
-        private void ShowStatus(string status)
-        {
-            _ui.ShowStatus(status);
-        }
-    }
-
-    public class NullAuction : IAuction
-    {
-        private readonly Chat _chat;
-
-        public NullAuction(Chat chat)
-        {
-            _chat = chat;
-        }
-
-        public void Bid(int amount)
-        {
-            try
-            {
-                _chat.SendMessage(string.Format(ApplicationConstants.BidFormat, amount));
-            }
-            catch (Exception)
-            {
-                //todo: how to show error?
-                throw;
-            }
         }
     }
 }
