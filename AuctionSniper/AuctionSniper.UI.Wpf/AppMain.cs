@@ -4,7 +4,7 @@ using AuctionSniper.XMPP;
 
 namespace AuctionSniper.UI.Wpf
 {
-    public class AppMain : ISniperListener
+    public class AppMain
     {
         private readonly SniperWindow _ui;
 
@@ -58,20 +58,33 @@ namespace AuctionSniper.UI.Wpf
                                  .CreateChat(AuctionId(itemId), null);
 
             var auction = new XMPPAuction(chat);
-            chat.AddMessageListener(
-                    new AuctionMessageTranslator(new Sniper(new NullAuction(chat), this)).ProcessMessage
-                );
+            chat.AddMessageListener(new AuctionMessageTranslator(new Sniper(new NullAuction(chat), new SniperStateDisplayer(_ui))).ProcessMessage);
             auction.Join();
+        }
+    }
+
+    internal class SniperStateDisplayer : ISniperListener
+    {
+        private readonly SniperWindow _ui;
+
+        public SniperStateDisplayer(SniperWindow ui)
+        {
+            _ui = ui;
         }
 
         public void SniperLost()
         {
-            _ui.ShowStatus(ApplicationConstants.StatusLost);
+            ShowStatus(ApplicationConstants.StatusLost);
         }
 
         public void SniperBidding()
         {
-            _ui.ShowStatus(ApplicationConstants.StatusBidding);
+            ShowStatus(ApplicationConstants.StatusBidding);
+        }
+
+        private void ShowStatus(string status)
+        {
+            _ui.ShowStatus(status);
         }
     }
 
