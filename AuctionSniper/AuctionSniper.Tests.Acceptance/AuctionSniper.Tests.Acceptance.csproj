@@ -64,6 +64,8 @@
     <Reference Include="TestStack.White">
       <HintPath>..\packages\TestStack.White.0.10.3.118\lib\net40\TestStack.White.dll</HintPath>
     </Reference>
+    <Reference Include="UIAutomationClient" />
+    <Reference Include="UIAutomationTypes" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ApplicationRunner.cs" />

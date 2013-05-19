@@ -1,9 +1,14 @@
-﻿using System.Diagnostics;
+﻿using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
+using System.Windows.Automation;
 using AuctionSniper.Domain;
 using AuctionSniper.UI.Wpf;
 using NUnit.Framework;
 using White.Core;
 using White.Core.UIItems;
+using White.Core.UIItems.Finders;
+using White.Core.UIItems.ListViewItems;
 
 namespace AuctionSniper.Tests.Acceptance
 {
@@ -49,7 +54,27 @@ namespace AuctionSniper.Tests.Acceptance
         {
             var window = _application.GetWindow("Auction Sniper Main");
             var label = window.Get<WPFLabel>("SniperStatus");
+            var dataGird = window.Get<ListView>("grid");
+
+            ListViewCells cells = dataGird.Rows[1].GetCells(dataGird.Header);
+
+            ListViewCell cell = cells[0];
+
             Assert.That(label.Text, Is.EqualTo(status));
+        }
+    }
+
+    public static class Extensions
+    {
+        public static ListViewCells GetCells(this ListViewRow row, ListViewHeader header)
+        {
+
+            AutomationElementCollection coll = row.AutomationElement.FindAll(TreeScope.Children, new PropertyCondition(AutomationElement.ClassNameProperty, "DataGridCell"));
+
+            List<AutomationElement> list = coll.Cast<object>().Cast<AutomationElement>().ToList();
+
+            return new ListViewCells(list, row.ActionListener, header);
+
         }
     }
 }

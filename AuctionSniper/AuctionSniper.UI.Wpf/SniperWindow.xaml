@@ -3,6 +3,9 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="Auction Sniper Main" Height="350" Width="525">
     <Grid>
-        <TextBlock x:Name="SniperStatus"></TextBlock>
+        <TextBlock x:Name="SniperStatus"></TextBlock>                
+        <DataGrid AutoGenerateColumns="True" x:Name="grid" CanUserAddRows="False">
+            
+        </DataGrid>
     </Grid>
 </Window>
