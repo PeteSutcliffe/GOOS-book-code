@@ -3,11 +3,10 @@ using System.Diagnostics;
 using System.Linq;
 using System.Windows.Automation;
 using AuctionSniper.Domain;
-using AuctionSniper.UI.Wpf;
+
 using NUnit.Framework;
 using White.Core;
 using White.Core.UIItems;
-using White.Core.UIItems.Finders;
 using White.Core.UIItems.ListViewItems;
 
 namespace AuctionSniper.Tests.Acceptance
@@ -23,6 +22,7 @@ namespace AuctionSniper.Tests.Acceptance
             _application = Application.Launch(
                 new ProcessStartInfo("AuctionSniper.UI.Wpf.exe",
                                      string.Format("broker_channel {0} {1}", SniperXmppId, auction.ItemId)));
+            _application.WaitWhileBusy();
         }
 
         public void Stop()
@@ -52,15 +52,30 @@ namespace AuctionSniper.Tests.Acceptance
 
         private void HasShownSniperStatus(string status)
         {
+            HasCellWithText(status);
+        }
+
+        private void HasCellWithText(string text)
+        {
             var window = _application.GetWindow("Auction Sniper Main");
-            var label = window.Get<WPFLabel>("SniperStatus");
-            var dataGird = window.Get<ListView>("grid");
+            var grid = window.Get<ListView>("grid");
 
-            ListViewCells cells = dataGird.Rows[1].GetCells(dataGird.Header);
+            bool foundText = false;
 
-            ListViewCell cell = cells[0];
+            foreach (var row in grid.Rows)
+            {
+                foreach (var cell in row.GetCells(grid.Header))
+                {
+                    if (cell.Text == text)
+                    {
+                        foundText = true;
+                        break;
+                    }
+                }
+                if (foundText) break;
+            }
 
-            Assert.That(label.Text, Is.EqualTo(status));
+            Assert.That(foundText, Is.EqualTo(true), string.Format("Cell with text '{0}' not found", text));
         }
     }
 
