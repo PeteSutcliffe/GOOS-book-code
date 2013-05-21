@@ -12,7 +12,7 @@ namespace AuctionSniper.Tests.Acceptance
         [TestFixtureSetUp]
         public void FixtureSetup()
         {
-            _smppServer = Application.Launch("AuctionSniper.MessageBroker.exe");
+            _smppServer = Application.Launch("AuctionSniper.MessageBroker.exe");            
         }
 
         [Test]
