@@ -49,14 +49,14 @@ namespace AuctionSniper.Tests.Acceptance
             _auction.HasReceivedJoinRequestFrom(ApplicationRunner.SniperXmppId);
 
             _auction.ReportPrice(1000, 98, "other bidder");
-            _application.HasShownSniperIsBidding();
+            _application.HasShownSniperIsBidding(1000, 1098);
 
             _auction.HasReceivedBid(1098, ApplicationRunner.SniperXmppId);
             _auction.ReportPrice(1098, 97, ApplicationRunner.SniperXmppId);
-            _application.HasShownSniperIsWinning();
+            _application.HasShownSniperIsWinning(1098);
 
             _auction.AnnounceClosed();
-            _application.ShowsSniperHasWonAuction();
+            _application.ShowsSniperHasWonAuction(1098);
         }
 
         [TestFixtureTearDown]

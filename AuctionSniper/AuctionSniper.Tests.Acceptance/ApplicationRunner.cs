@@ -64,18 +64,60 @@ namespace AuctionSniper.Tests.Acceptance
 
             foreach (var row in grid.Rows)
             {
-                foreach (var cell in row.GetCells(grid.Header))
+                if (row.GetCells(grid.Header).Any(cell => cell.Text == text))
                 {
-                    if (cell.Text == text)
-                    {
-                        foundText = true;
-                        break;
-                    }
+                    foundText = true;
                 }
                 if (foundText) break;
             }
 
-            Assert.That(foundText, Is.EqualTo(true), string.Format("Cell with text '{0}' not found", text));
+            Assert.That(foundText, Is.EqualTo(true), string.Format("Cell with text '{0}' not found", text));            
+        }
+
+        private void HasRowWithMatchingCells(params string[] values)
+        {
+            var window = _application.GetWindow("Auction Sniper Main");
+            var grid = window.Get<ListView>("grid");
+
+            bool foundRow = false;
+
+            foreach (var row in grid.Rows)
+            {
+                var cells = row.GetCells(grid.Header);
+
+                bool matchedAll = true;
+
+                for (int i = 0; i < cells.Count ; i++)
+                {
+                    if (cells[i].Text != values[0])
+                    {
+                        matchedAll = false;
+                        break;
+                    }
+                }
+
+                if (matchedAll)
+                {
+                    foundRow = true;
+                }                
+            }
+
+            Assert.That(foundRow, Is.EqualTo(true), "Row matching supplied values not found");            
+        }
+
+        public void HasShownSniperIsBidding(int lastPrice, int lastBid)
+        {
+            HasRowWithMatchingCells(lastPrice.ToString(), lastBid.ToString());
+        }
+
+        public void HasShownSniperIsWinning(int winningBid)
+        {
+            HasRowWithMatchingCells(winningBid.ToString());
+        }
+
+        public void ShowsSniperHasWonAuction(int lastPrice)
+        {
+            HasRowWithMatchingCells(lastPrice.ToString());
         }
     }
 
