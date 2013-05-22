@@ -26,7 +26,7 @@ namespace AuctionSniper.Tests.Acceptance
             _connection = new Connection(XmppHostName, string.Format(ItemIdAsLogin, itemId));
         }
         
-        public object ItemId
+        public string ItemId
         {
             get { return _itemId; }
         }

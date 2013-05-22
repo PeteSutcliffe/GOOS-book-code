@@ -11,9 +11,13 @@ using White.Core.UIItems.ListViewItems;
 
 namespace AuctionSniper.Tests.Acceptance
 {
-    internal class ApplicationRunner
+    class ApplicationRunner
     {
         private Application _application;
+
+        private string _itemId;
+
+        private AuctionSniperDriver _driver;
 
         public const string SniperXmppId = "sniper";
 
@@ -23,6 +27,8 @@ namespace AuctionSniper.Tests.Acceptance
                 new ProcessStartInfo("AuctionSniper.UI.Wpf.exe",
                                      string.Format("broker_channel {0} {1}", SniperXmppId, auction.ItemId)));
             _application.WaitWhileBusy();
+            _itemId = auction.ItemId;
+            _driver = new AuctionSniperDriver(_application);
         }
 
         public void Stop()
@@ -52,7 +58,37 @@ namespace AuctionSniper.Tests.Acceptance
 
         private void HasShownSniperStatus(string status)
         {
-            HasCellWithText(status);
+            _driver.ShowsSniperStatus(status);
+        }        
+
+        public void HasShownSniperIsBidding(int lastPrice, int lastBid)
+        {
+            _driver.ShowsSniperStatus(_itemId, lastPrice, lastBid, ApplicationConstants.StatusBidding);
+        }
+
+        public void HasShownSniperIsWinning(int winningBid)
+        {
+            _driver.ShowsSniperStatus(_itemId, winningBid, winningBid, ApplicationConstants.StatusWinning);
+        }
+
+        public void ShowsSniperHasWonAuction(int lastPrice)
+        {
+            _driver.ShowsSniperStatus(_itemId, lastPrice, lastPrice, ApplicationConstants.StatusWon);
+        }
+    }
+
+    class AuctionSniperDriver
+    {
+        private readonly Application _application;
+
+        public AuctionSniperDriver(Application application)
+        {
+            _application = application;
+        }
+
+        public void ShowsSniperStatus(string itemId, int lastPrice, int lastbid, string status)
+        {
+            HasRowWithMatchingCells(itemId, lastPrice, lastbid, status);
         }
 
         private void HasCellWithText(string text)
@@ -71,10 +107,10 @@ namespace AuctionSniper.Tests.Acceptance
                 if (foundText) break;
             }
 
-            Assert.That(foundText, Is.EqualTo(true), string.Format("Cell with text '{0}' not found", text));            
+            Assert.That(foundText, Is.EqualTo(true), string.Format("Cell with text '{0}' not found", text));
         }
 
-        private void HasRowWithMatchingCells(params string[] values)
+        private void HasRowWithMatchingCells(params object[] values)
         {
             var window = _application.GetWindow("Auction Sniper Main");
             var grid = window.Get<ListView>("grid");
@@ -87,9 +123,9 @@ namespace AuctionSniper.Tests.Acceptance
 
                 bool matchedAll = true;
 
-                for (int i = 0; i < cells.Count ; i++)
+                for (int i = 0; i < cells.Count; i++)
                 {
-                    if (cells[i].Text != values[0])
+                    if (cells[i].Text != values[0].ToString())
                     {
                         matchedAll = false;
                         break;
@@ -99,25 +135,15 @@ namespace AuctionSniper.Tests.Acceptance
                 if (matchedAll)
                 {
                     foundRow = true;
-                }                
+                }
             }
 
-            Assert.That(foundRow, Is.EqualTo(true), "Row matching supplied values not found");            
+            Assert.That(foundRow, Is.EqualTo(true), "Row matching supplied values not found");
         }
 
-        public void HasShownSniperIsBidding(int lastPrice, int lastBid)
+        public void ShowsSniperStatus(string itemId)
         {
-            HasRowWithMatchingCells(lastPrice.ToString(), lastBid.ToString());
-        }
-
-        public void HasShownSniperIsWinning(int winningBid)
-        {
-            HasRowWithMatchingCells(winningBid.ToString());
-        }
-
-        public void ShowsSniperHasWonAuction(int lastPrice)
-        {
-            HasRowWithMatchingCells(lastPrice.ToString());
+            HasCellWithText(itemId);
         }
     }
 
