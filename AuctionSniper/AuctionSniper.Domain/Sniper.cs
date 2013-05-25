@@ -4,43 +4,41 @@
     {
         private readonly IAuction _auction;
         private readonly ISniperListener _sniperListener;
-        private readonly string _itemId;
-        private bool _isWinning;
+        private SniperSnapshot _snapshot;
 
         public Sniper(IAuction auction, ISniperListener sniperListener, string itemId)
         {
             _auction = auction;
             _sniperListener = sniperListener;
-            _itemId = itemId;
+            _snapshot = SniperSnapshot.Joining(itemId);
         }
 
         public void AuctionClosed()
         {
-            if (_isWinning)
-            {
-                _sniperListener.SniperWon();
-            }
-            else
-            {
-                _sniperListener.SniperLost();
-            }            
+            _snapshot = _snapshot.Closed();
+            NotifyChanged();
         }
 
         public void CurrentPrice(int price, int increment, PriceSource priceSource)
         {
-            _isWinning = priceSource == PriceSource.FromSniper;
-
-            if (_isWinning)
+            switch(priceSource)
             {
-                _sniperListener.SniperWinning();
-            }
-            else
-            {
-                int bid = price + increment;
-
-                _auction.Bid(bid);
-                _sniperListener.SniperBidding(new Sniperstate(_itemId, price, bid));
+                case PriceSource.FromSniper:
+                    _snapshot = _snapshot.Winning(price);
+                    break;
+                case PriceSource.FromOtherBidder:
+                    int bid = price + increment;
+                    _auction.Bid(bid);
+                    _snapshot = _snapshot.Bidding(price, bid);
+                    break;
             }                    
+
+            NotifyChanged();
+        }
+
+        private void NotifyChanged()
+        {
+            _sniperListener.SniperStateChanged(_snapshot);
         }
     }
 }

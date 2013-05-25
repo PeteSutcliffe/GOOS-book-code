@@ -11,34 +11,9 @@ namespace AuctionSniper.UI.Wpf
             _ui = ui;
         }
 
-        public void SniperLost()
+        public void SniperStateChanged(SniperSnapshot sniperSnapshot)
         {
-            ShowStatus(ApplicationConstants.StatusLost);
-        }
-
-        public void SniperBidding(Sniperstate sniperstate)
-        {
-            ShowStatus(sniperstate, ApplicationConstants.StatusBidding);
-        }
-
-        private void ShowStatus(Sniperstate sniperstate, string status)
-        {
-            _ui.SniperStatusChanged(sniperstate, status);
-        }
-
-        public void SniperWinning()
-        {
-            ShowStatus(ApplicationConstants.StatusWinning);
-        }
-
-        public void SniperWon()
-        {
-            ShowStatus(ApplicationConstants.StatusWon);
-        }
-
-        private void ShowStatus(string status)
-        {
-            _ui.SniperStatusChanged(status);
+            _ui.SniperStatusChanged(sniperSnapshot);
         }
     }
 }

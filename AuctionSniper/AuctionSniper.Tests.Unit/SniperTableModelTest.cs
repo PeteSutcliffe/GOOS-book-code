@@ -26,12 +26,12 @@ namespace AuctionSniper.Tests.Unit
             bool changed = false;
             _model.RowChanged += (sender, args) => changed = true;
 
-            _model.SniperStatusChanged(new Sniperstate("item id", 555, 666), ApplicationConstants.StatusBidding);
+            _model.SniperStatusChanged(new SniperSnapshot("item id", 555, 666, SniperState.Bidding));
 
             AssertColumnEquals(SnipersTableModel.Column.ItemIdentifier, "item id");
             AssertColumnEquals(SnipersTableModel.Column.LastPrice, 555);
             AssertColumnEquals(SnipersTableModel.Column.LastBid, 666);
-            AssertColumnEquals(SnipersTableModel.Column.SniperStatus, ApplicationConstants.StatusBidding);
+            AssertColumnEquals(SnipersTableModel.Column.SniperState, ApplicationConstants.StatusBidding);
 
             Assert.That(changed);
         }

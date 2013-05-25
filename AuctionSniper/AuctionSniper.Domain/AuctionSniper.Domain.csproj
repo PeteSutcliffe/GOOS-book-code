@@ -67,7 +67,9 @@
     <Compile Include="SnipersTableModel.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Sniperstate.cs" />
+    <Compile Include="SniperSnapshot.cs" />
+    <Compile Include="SniperState.cs" />
+    <Compile Include="SniperStateExtensions.cs" />
     <Compile Include="XMPPAuction.cs" />
   </ItemGroup>
   <ItemGroup>

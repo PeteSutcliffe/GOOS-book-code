@@ -10,8 +10,17 @@ namespace AuctionSniper.Domain
             ItemIdentifier,
             LastPrice,
             LastBid,
-            SniperStatus
+            SniperState
         }
+
+        private static readonly string[] StatusText =
+            {
+                ApplicationConstants.StatusJoining, 
+                ApplicationConstants.StatusBidding, 
+                ApplicationConstants.StatusWinning,
+                ApplicationConstants.StatusLost,
+                ApplicationConstants.StatusWon
+            };
 
         public SnipersTableModel()
         {
@@ -24,20 +33,13 @@ namespace AuctionSniper.Domain
             Rows.Add(NewRow());
         }
 
-        public void SetStatusText(string status)
+        public void SniperStatusChanged(SniperSnapshot newSnapshot)
         {
             Rows[0].BeginEdit();
-            Rows[0][(int)Column.SniperStatus] = status;
-            Rows[0].AcceptChanges();
-        }
-
-        public void SniperStatusChanged(Sniperstate sniperstate, string newStatusText)
-        {
-            Rows[0].BeginEdit();
-            Rows[0][(int)Column.ItemIdentifier] = sniperstate.ItemId;
-            Rows[0][(int)Column.LastPrice] = sniperstate.LastPrice;
-            Rows[0][(int)Column.LastBid] = sniperstate.LastBid;
-            Rows[0][(int)Column.SniperStatus] = newStatusText;
+            Rows[0][(int)Column.ItemIdentifier] = newSnapshot.ItemId;
+            Rows[0][(int)Column.LastPrice] = newSnapshot.LastPrice;
+            Rows[0][(int)Column.LastBid] = newSnapshot.LastBid;
+            Rows[0][(int)Column.SniperState] = StatusText[(int)newSnapshot.State];
             Rows[0].AcceptChanges();
         }
     }
