@@ -4,12 +4,14 @@
     {
         private readonly IAuction _auction;
         private readonly ISniperListener _sniperListener;
+        private readonly string _itemId;
         private bool _isWinning;
 
-        public Sniper(IAuction auction, ISniperListener sniperListener)
+        public Sniper(IAuction auction, ISniperListener sniperListener, string itemId)
         {
             _auction = auction;
             _sniperListener = sniperListener;
+            _itemId = itemId;
         }
 
         public void AuctionClosed()
@@ -34,8 +36,10 @@
             }
             else
             {
-                _auction.Bid(price + increment);
-                _sniperListener.SniperBidding();
+                int bid = price + increment;
+
+                _auction.Bid(bid);
+                _sniperListener.SniperBidding(new Sniperstate(_itemId, price, bid));
             }                    
         }
     }

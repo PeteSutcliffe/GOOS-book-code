@@ -10,13 +10,14 @@ namespace AuctionSniper.Tests.Unit
         private Sniper _sniper;
         private Mock<ISniperListener> _mockSniperListener;
         private Mock<IAuction> _mockAuction;
+        private const string ItemId = "ITEM";
 
         [SetUp]
         public void Setup()
         {
             _mockSniperListener = new Mock<ISniperListener>();
             _mockAuction = new Mock<IAuction>();
-            _sniper = new Sniper(_mockAuction.Object, _mockSniperListener.Object);
+            _sniper = new Sniper(_mockAuction.Object, _mockSniperListener.Object, ItemId);
         }
 
         [Test]
@@ -32,7 +33,7 @@ namespace AuctionSniper.Tests.Unit
             // An attempt to emulate the state tracking outlined in the book.
 
             string state = null;
-            _mockSniperListener.Allow(l => l.SniperBidding(),
+            _mockSniperListener.Allow(l => l.SniperBidding(It.IsAny<Sniperstate>()),
                                () => state = "bidding");
 
             _mockSniperListener.RestrictState(l => l.SniperLost(),
@@ -49,11 +50,12 @@ namespace AuctionSniper.Tests.Unit
         {
             const int price = 1001;
             const int increment = 25;
+            const int bid = price + increment;
 
             _sniper.CurrentPrice(price, increment, PriceSource.FromOtherBidder);
-            
-            _mockAuction.Verify(a => a.Bid(price + increment), Times.Once());
-            _mockSniperListener.Verify(l => l.SniperBidding(), Times.AtLeastOnce());
+
+            _mockAuction.Verify(a => a.Bid(bid), Times.Once());
+            _mockSniperListener.Verify(l => l.SniperBidding(new Sniperstate(ItemId, price, bid)), Times.AtLeastOnce());
         }
 
         [Test]

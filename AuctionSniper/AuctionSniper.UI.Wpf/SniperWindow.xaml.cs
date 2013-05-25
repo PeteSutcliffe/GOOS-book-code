@@ -1,6 +1,4 @@
-﻿using System.Data;
-
-using AuctionSniper.Domain;
+﻿using AuctionSniper.Domain;
 
 namespace AuctionSniper.UI.Wpf
 {
@@ -18,25 +16,14 @@ namespace AuctionSniper.UI.Wpf
             grid.ItemsSource = _model.DefaultView;
         }
 
-        public void ShowStatus(string status)
+        public void SniperStatusChanged(string status)
         {
             _model.SetStatusText(status);
         }
 
-        public class SnipersTableModel : DataTable
+        public void SniperStatusChanged(Sniperstate sniperstate, string status)
         {
-            public SnipersTableModel()
-            {
-                Columns.Add();
-                Rows.Add(NewRow());
-            }
-
-            public void SetStatusText(string status)
-            {
-                Rows[0].BeginEdit();
-                Rows[0][0] = status;
-                Rows[0].AcceptChanges();
-            }
-        }        
+            _model.SniperStatusChanged(sniperstate, status);
+        }
     }
 }

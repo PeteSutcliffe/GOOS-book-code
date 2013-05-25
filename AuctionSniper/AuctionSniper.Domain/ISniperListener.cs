@@ -3,7 +3,7 @@
     public interface ISniperListener
     {
         void SniperLost();
-        void SniperBidding();
+        void SniperBidding(Sniperstate sniperstate);
         void SniperWinning();
         void SniperWon();
     }

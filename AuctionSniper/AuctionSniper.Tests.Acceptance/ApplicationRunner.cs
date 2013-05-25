@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Text;
 using System.Windows.Automation;
 using AuctionSniper.Domain;
 
@@ -125,7 +126,7 @@ namespace AuctionSniper.Tests.Acceptance
 
                 for (int i = 0; i < cells.Count; i++)
                 {
-                    if (cells[i].Text != values[0].ToString())
+                    if (cells[i].Text != values[i].ToString())
                     {
                         matchedAll = false;
                         break;
@@ -138,7 +139,16 @@ namespace AuctionSniper.Tests.Acceptance
                 }
             }
 
-            Assert.That(foundRow, Is.EqualTo(true), "Row matching supplied values not found");
+            StringBuilder sb = new StringBuilder();
+            sb.Append("Could not find row with values: ");
+            for (int i = 0; i < values.Length; i++)
+            {
+                sb.AppendFormat("'{0}'", values[i]);
+                if (i != values.Length - 1)
+                    sb.Append(", ");
+            }
+
+                Assert.That(foundRow, Is.EqualTo(true), sb.ToString());
         }
 
         public void ShowsSniperStatus(string itemId)

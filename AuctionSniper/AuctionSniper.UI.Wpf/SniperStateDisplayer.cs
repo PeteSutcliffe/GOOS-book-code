@@ -16,9 +16,14 @@ namespace AuctionSniper.UI.Wpf
             ShowStatus(ApplicationConstants.StatusLost);
         }
 
-        public void SniperBidding()
+        public void SniperBidding(Sniperstate sniperstate)
         {
-            ShowStatus(ApplicationConstants.StatusBidding);
+            ShowStatus(sniperstate, ApplicationConstants.StatusBidding);
+        }
+
+        private void ShowStatus(Sniperstate sniperstate, string status)
+        {
+            _ui.SniperStatusChanged(sniperstate, status);
         }
 
         public void SniperWinning()
@@ -33,7 +38,7 @@ namespace AuctionSniper.UI.Wpf
 
         private void ShowStatus(string status)
         {
-            _ui.ShowStatus(status);
+            _ui.SniperStatusChanged(status);
         }
     }
 }

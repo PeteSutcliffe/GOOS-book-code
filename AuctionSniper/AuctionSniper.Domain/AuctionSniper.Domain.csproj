@@ -64,6 +64,10 @@
     <Compile Include="ISniperListener.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Sniper.cs" />
+    <Compile Include="SnipersTableModel.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Sniperstate.cs" />
     <Compile Include="XMPPAuction.cs" />
   </ItemGroup>
   <ItemGroup>
