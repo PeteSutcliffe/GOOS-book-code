@@ -12,7 +12,9 @@ namespace AuctionSniper.UI.Wpf
         private const int ArgHostName = 0;
         private const int ArgUserName = 1;
         private const int ArgItemId = 2;
-        private const string ItemIdAsLogin = "auction-{0}";        
+        private const string ItemIdAsLogin = "auction-{0}";  
+      
+        SnipersTableModel _snipers = new SnipersTableModel();
 
         public static void Run(string[] args)
         {            
@@ -27,7 +29,7 @@ namespace AuctionSniper.UI.Wpf
 
         public AppMain()
         {
-            _ui = new SniperWindow();
+            _ui = new SniperWindow(_snipers);
             _ui.Show();
             _ui.Closing += UiClosing;
         }
@@ -60,7 +62,7 @@ namespace AuctionSniper.UI.Wpf
             chat.AddMessageListener(
                 new AuctionMessageTranslator(
                     _connection.User, 
-                    new Sniper(auction, new SniperStateDisplayer(_ui), itemId)).ProcessMessage);
+                    new Sniper(auction, new SniperListener(_snipers), itemId)).ProcessMessage);
             auction.Join();
         }
     }

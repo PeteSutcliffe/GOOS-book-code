@@ -4,20 +4,11 @@ namespace AuctionSniper.UI.Wpf
 {
     public partial class SniperWindow
     {
-        private readonly SnipersTableModel _model;
-
-        public SniperWindow()
+        public SniperWindow(SnipersTableModel model)
         {
             InitializeComponent();
 
-            _model = new SnipersTableModel();
-
-            grid.ItemsSource = _model.DefaultView;
-        }
-
-        public void SniperStatusChanged(SniperSnapshot sniperSnapshot)
-        {
-            _model.SniperStatusChanged(sniperSnapshot);
+            grid.ItemsSource = model.DefaultView;
         }
     }
 }

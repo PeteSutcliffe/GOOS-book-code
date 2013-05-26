@@ -22,7 +22,7 @@ namespace AuctionSniper.Tests.Acceptance
             _application.StartBiddingIn(_auction);
             _auction.HasReceivedJoinRequestFrom(ApplicationRunner.SniperXmppId);
             _auction.AnnounceClosed();
-            _application.ShowsSniperHasLostAuction();
+            _application.ShowsSniperHasLostAuction(0, 0);
         }
 
         [Test]
@@ -33,12 +33,12 @@ namespace AuctionSniper.Tests.Acceptance
             _auction.HasReceivedJoinRequestFrom(ApplicationRunner.SniperXmppId);
 
             _auction.ReportPrice(1000, 98, "other bidder");
-            _application.HasShownSniperIsBidding();
+            _application.HasShownSniperIsBidding(1000, 1098);
 
             _auction.HasReceivedBid(1098, ApplicationRunner.SniperXmppId);
 
             _auction.AnnounceClosed();
-            _application.ShowsSniperHasLostAuction();
+            _application.ShowsSniperHasLostAuction(1000, 1098);
         }
 
         [Test]
