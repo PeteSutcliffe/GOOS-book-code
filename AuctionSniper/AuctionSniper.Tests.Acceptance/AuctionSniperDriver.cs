@@ -19,10 +19,18 @@ namespace AuctionSniper.Tests.Acceptance
             HasRowWithMatchingCells(itemId, lastPrice, lastbid, status);
         }
 
+        public void HasColumnTitles()
+        {
+            var grid = FindGrid();
+            Assert.That(grid.Header.Columns[0].Text, Is.EqualTo("Item"));
+            Assert.That(grid.Header.Columns[1].Text, Is.EqualTo("Last Price"));
+            Assert.That(grid.Header.Columns[2].Text, Is.EqualTo("Last Bid"));
+            Assert.That(grid.Header.Columns[3].Text, Is.EqualTo("State"));
+        }
+
         private void HasRowWithMatchingCells(params object[] values)
         {
-            var window = _application.GetWindow("Auction Sniper Main");
-            var grid = window.Get<ListView>("grid");
+            var grid = FindGrid();
 
             bool foundRow = false;
 
@@ -57,6 +65,14 @@ namespace AuctionSniper.Tests.Acceptance
             }
 
             Assert.That(foundRow, Is.EqualTo(true), sb.ToString());
+        }
+
+
+        private ListView FindGrid()
+        {
+            var window = _application.GetWindow("Auction Sniper Main");
+            var grid = window.Get<ListView>("grid");
+            return grid;
         }
     }
 }

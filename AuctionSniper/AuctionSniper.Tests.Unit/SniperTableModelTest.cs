@@ -31,7 +31,7 @@ namespace AuctionSniper.Tests.Unit
             AssertColumnEquals(SnipersTableModel.Column.ItemIdentifier, "item id");
             AssertColumnEquals(SnipersTableModel.Column.LastPrice, 555);
             AssertColumnEquals(SnipersTableModel.Column.LastBid, 666);
-            AssertColumnEquals(SnipersTableModel.Column.SniperState, ApplicationConstants.StatusBidding);
+            AssertColumnEquals(SnipersTableModel.Column.SniperState, "Bidding");
 
             Assert.That(changed);
         }

@@ -6,7 +6,7 @@ namespace AuctionSniper.Domain
     public class SnipersTableModel : DataTable
     {
         public enum Column
-        {
+        {            
             ItemIdentifier,
             LastPrice,
             LastBid,
@@ -15,11 +15,19 @@ namespace AuctionSniper.Domain
 
         private static readonly string[] StatusText =
             {
-                ApplicationConstants.StatusJoining, 
-                ApplicationConstants.StatusBidding, 
-                ApplicationConstants.StatusWinning,
-                ApplicationConstants.StatusLost,
-                ApplicationConstants.StatusWon
+                "Joining", 
+                "Bidding", 
+                "Winning",
+                "Lost",
+                "Won"
+            };
+
+        private static readonly string[] ColumnText =
+            {
+                "Item",
+                "Last Price",
+                "Last Bid",
+                "State"
             };
 
         public SnipersTableModel()
@@ -31,6 +39,7 @@ namespace AuctionSniper.Domain
             Columns[(int) Column.LastPrice].DataType = typeof (int);
 
             Rows.Add(NewRow());
+            SniperStatusChanged(new SniperSnapshot("", 0, 0, SniperState.Joining));
         }
 
         public void SniperStatusChanged(SniperSnapshot newSnapshot)
@@ -41,6 +50,16 @@ namespace AuctionSniper.Domain
             Rows[0][(int)Column.LastBid] = newSnapshot.LastBid;
             Rows[0][(int)Column.SniperState] = StatusText[(int)newSnapshot.State];
             Rows[0].AcceptChanges();
+        }
+
+        public static string TextFor(SniperState state)
+        {
+            return StatusText[(int) state];
+        }
+
+        public static string TextFor(Column column)
+        {
+            return ColumnText[(int)column];
         }
     }
 }

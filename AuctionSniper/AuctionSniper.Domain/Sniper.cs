@@ -11,6 +11,7 @@
             _auction = auction;
             _sniperListener = sniperListener;
             _snapshot = SniperSnapshot.Joining(itemId);
+            NotifyChanged();
         }
 
         public void AuctionClosed()
