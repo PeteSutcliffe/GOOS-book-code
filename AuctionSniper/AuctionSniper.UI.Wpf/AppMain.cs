@@ -62,7 +62,7 @@ namespace AuctionSniper.UI.Wpf
             chat.AddMessageListener(
                 new AuctionMessageTranslator(
                     _connection.User, 
-                    new Sniper(auction, new SniperListener(_snipers), itemId)).ProcessMessage);
+                    new Sniper(auction, new SniperListener(_ui.Dispatcher, _snipers), itemId)).ProcessMessage);
             auction.Join();
         }
     }

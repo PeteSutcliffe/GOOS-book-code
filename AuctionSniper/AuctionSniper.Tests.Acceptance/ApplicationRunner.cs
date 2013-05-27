@@ -29,6 +29,7 @@ namespace AuctionSniper.Tests.Acceptance
         public void Stop()
         {
             _application.Close();
+            _application.Dispose();
         }
 
         public void ShowsSniperHasLostAuction(int lastPrice, int lastBid)

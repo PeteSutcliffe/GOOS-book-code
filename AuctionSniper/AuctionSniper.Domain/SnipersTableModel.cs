@@ -1,19 +1,28 @@
-﻿using System;
-using System.Data;
+﻿using System.Collections.ObjectModel;
+using System.ComponentModel;
 
 namespace AuctionSniper.Domain
 {
-    public class SnipersTableModel : DataTable
+    public class SnipersTableModel : ObservableCollection<SnipersTableModel.TableItem>
     {
-        public enum Column
-        {            
-            ItemIdentifier,
-            LastPrice,
-            LastBid,
-            SniperState
+        public SnipersTableModel()
+        {
+            this.Add(new TableItem(SniperSnapshot.Joining("")));
         }
 
-        private static readonly string[] StatusText =
+        public void SniperStatusChanged(SniperSnapshot newSnapshot)
+        {
+            SetItem(0, new TableItem(newSnapshot));
+        }
+
+        public static string TextFor(SniperState state)
+        {
+            return TableItem.TextFor(state);
+        }
+
+        public class TableItem
+        {
+            private static readonly string[] StatusText =
             {
                 "Joining", 
                 "Bidding", 
@@ -22,44 +31,29 @@ namespace AuctionSniper.Domain
                 "Won"
             };
 
-        private static readonly string[] ColumnText =
+            public static string TextFor(SniperState state)
             {
-                "Item",
-                "Last Price",
-                "Last Bid",
-                "State"
-            };
+                return StatusText[(int)state];
+            }
+    
+            public TableItem(SniperSnapshot snapshot)
+            {
+                ItemId = snapshot.ItemId;
+                LastPrice = snapshot.LastPrice;
+                LastBid = snapshot.LastBid;
+                State = StatusText[(int) snapshot.State];
+            }
+            
+            [DisplayName("Item")]
+            public string ItemId { get; private set; }
+            
+            [DisplayName("Last Price")]
+            public int LastPrice { get; private set; }
 
-        public SnipersTableModel()
-        {
-            for (var i = 0; i < Enum.GetValues(typeof(Column)).Length; i++)
-                Columns.Add();
+            [DisplayName("Last Bid")]
+            public int LastBid { get; private set; }           
 
-            Columns[(int) Column.LastBid].DataType = typeof (int);
-            Columns[(int) Column.LastPrice].DataType = typeof (int);
-
-            Rows.Add(NewRow());
-            SniperStatusChanged(new SniperSnapshot("", 0, 0, SniperState.Joining));
-        }
-
-        public void SniperStatusChanged(SniperSnapshot newSnapshot)
-        {
-            Rows[0].BeginEdit();
-            Rows[0][(int)Column.ItemIdentifier] = newSnapshot.ItemId;
-            Rows[0][(int)Column.LastPrice] = newSnapshot.LastPrice;
-            Rows[0][(int)Column.LastBid] = newSnapshot.LastBid;
-            Rows[0][(int)Column.SniperState] = StatusText[(int)newSnapshot.State];
-            Rows[0].AcceptChanges();
-        }
-
-        public static string TextFor(SniperState state)
-        {
-            return StatusText[(int) state];
-        }
-
-        public static string TextFor(Column column)
-        {
-            return ColumnText[(int)column];
+            public string State { get; private set; }            
         }
     }
 }
