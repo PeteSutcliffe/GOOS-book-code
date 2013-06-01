@@ -42,7 +42,7 @@ namespace AuctionSniper.XMPP
             _inputChannel.ReceiveCompleted += OnMessageReceived;
             _inputChannel.BeginReceive();
             _inputChannel.Formatter = new XmlMessageFormatter(new[] { typeof(string) });
-            _chatManager = new ChatManager(this, _inputChannel);
+            _chatManager = new ChatManager(this);
         }
 
         private void OnMessageReceived(object sender, ReceiveCompletedEventArgs results)
@@ -56,7 +56,7 @@ namespace AuctionSniper.XMPP
                     GetChatManager().ReceiveChat(extension.MessageFrom);
                     break;
                 case MessageInfo.MessageTypes.Message:
-                    GetChatManager().MessageReceived(new Message(message.Body.ToString()));
+                    GetChatManager().MessageReceived(new Message(message.Body.ToString()), extension.MessageTo);
                     break;
             }
 

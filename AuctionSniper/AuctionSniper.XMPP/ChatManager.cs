@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Messaging;
 
 namespace AuctionSniper.XMPP
 {
@@ -15,12 +14,9 @@ namespace AuctionSniper.XMPP
 
         private readonly Connection _connection;
 
-        private readonly MessageQueue _inputChannel;
-
-        internal ChatManager(Connection connection, MessageQueue inputChannel)
+        internal ChatManager(Connection connection)
         {
             _connection = connection;
-            _inputChannel = inputChannel;
         }
 
         public void AddChatListener(Action<Chat> chatCreated)
@@ -28,9 +24,9 @@ namespace AuctionSniper.XMPP
             _chatListeners.Add(chatCreated);
         }
 
-        internal void SendMessage(Message message)
+        internal void SendMessage(Message message, string participant)
         {
-            _connection.SendMessage(message, _messageFrom);
+            _connection.SendMessage(message, participant);
         }
 
         private void CreateChatFrom(string messageFrom)
@@ -55,7 +51,7 @@ namespace AuctionSniper.XMPP
             return _chat;
         }
 
-        public void MessageReceived(Message message)
+        public void MessageReceived(Message message, string messageTo)
         {
             _chat.MessageReceived(message);
         }

@@ -1,34 +1,36 @@
-﻿using AuctionSniper.Domain;
+﻿using System;
+using AuctionSniper.Domain;
 using AuctionSniper.XMPP;
 
 namespace AuctionSniper.UI.Wpf
 {
     public class AppMain
     {
+        private readonly Connection _connection;
         private readonly SniperWindow _ui;
-
-        private Connection _connection;
 
         private const int ArgHostName = 0;
         private const int ArgUserName = 1;
-        private const int ArgItemId = 2;
-        private const string ItemIdAsLogin = "auction-{0}";  
-      
-        SnipersTableModel _snipers = new SnipersTableModel();
+        private const string ItemIdAsLogin = "auction-{0}";
+
+        readonly SnipersTableModel _snipers = new SnipersTableModel();
 
         public static void Run(string[] args)
-        {            
-            var appMain = new AppMain();
-
+        {                                    
             var hostName = args[ArgHostName];
             var userName = args[ArgUserName];
-            var itemId = args[ArgItemId];
 
-            appMain.JoinAuction(hostName, userName, itemId);
+            var connection = ConnectTo(hostName, userName);
+            var appMain = new AppMain(connection);
+            for (var i = 2; i < args.Length; i++)
+            {
+                appMain.JoinAuction(args[i]);
+            }
         }
 
-        public AppMain()
+        public AppMain(Connection connection)
         {
+            _connection = connection;
             _ui = new SniperWindow(_snipers);
             _ui.Show();
             _ui.Closing += UiClosing;
@@ -51,10 +53,8 @@ namespace AuctionSniper.UI.Wpf
             return string.Format(ItemIdAsLogin, itemId);
         }
 
-        private void JoinAuction(string hostName, string userName, string itemId)
+        private void JoinAuction(string itemId)
         {
-            _connection = ConnectTo(hostName, userName);
-
             var chat = _connection.GetChatManager()
                                  .CreateChat(AuctionId(itemId), null);
 

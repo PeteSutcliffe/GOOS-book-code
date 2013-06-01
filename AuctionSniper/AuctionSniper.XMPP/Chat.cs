@@ -34,12 +34,12 @@ namespace AuctionSniper.XMPP
 
         public void SendMessage(Message message)
         {
-            _manager.SendMessage(message);
+            _manager.SendMessage(message, _participant);
         }
 
         public void SendMessage(string message)
         {
-            _manager.SendMessage(new Message(message));
+            _manager.SendMessage(new Message(message), _participant);
         }
     }
 }

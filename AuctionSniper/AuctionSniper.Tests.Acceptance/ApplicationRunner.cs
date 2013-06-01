@@ -1,4 +1,6 @@
-﻿using System.Diagnostics;
+﻿using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
 using AuctionSniper.Domain;
 using White.Core;
 
@@ -8,22 +10,29 @@ namespace AuctionSniper.Tests.Acceptance
     {
         private Application _application;
 
-        private string _itemId;
-
         private AuctionSniperDriver _driver;
 
         public const string SniperXmppId = "sniper";
 
-        public void StartBiddingIn(FakeAuctionServer auction)
+        public void StartBiddingIn(params FakeAuctionServer[] auctions)
         {
             _application = Application.Launch(
                 new ProcessStartInfo("AuctionSniper.UI.Wpf.exe",
-                                     string.Format("broker_channel {0} {1}", SniperXmppId, auction.ItemId)));
+                                     Arguments(auctions)));
             _application.WaitWhileBusy();
-            _itemId = auction.ItemId;
             _driver = new AuctionSniperDriver(_application);
             _driver.HasColumnTitles();
-            _driver.ShowsSniperStatus(_itemId, 0, 0, SnipersTableModel.TextFor(SniperState.Joining));
+
+            foreach (var auction in auctions)
+            {
+                _driver.ShowsSniperStatus(auction.ItemId, 0, 0, SnipersTableModel.TextFor(SniperState.Joining));                
+            }
+        }
+
+        private static string Arguments(IEnumerable<FakeAuctionServer> auctions)
+        {
+            return string.Format("broker_channel {0} {1}", SniperXmppId, 
+                string.Join(" ", auctions.Select(a => a.ItemId)));
         }
 
         public void Stop()
@@ -32,24 +41,24 @@ namespace AuctionSniper.Tests.Acceptance
             _application.Dispose();
         }
 
-        public void ShowsSniperHasLostAuction(int lastPrice, int lastBid)
+        public void ShowsSniperHasLostAuction(FakeAuctionServer auction, int lastPrice, int lastBid)
         {
-            _driver.ShowsSniperStatus(_itemId, lastPrice, lastBid, SnipersTableModel.TextFor(SniperState.Lost));
+            _driver.ShowsSniperStatus(auction.ItemId, lastPrice, lastBid, SnipersTableModel.TextFor(SniperState.Lost));
         }
 
-        public void HasShownSniperIsBidding(int lastPrice, int lastBid)
+        public void HasShownSniperIsBidding(FakeAuctionServer auction, int lastPrice, int lastBid)
         {
-            _driver.ShowsSniperStatus(_itemId, lastPrice, lastBid, SnipersTableModel.TextFor(SniperState.Bidding));
+            _driver.ShowsSniperStatus(auction.ItemId, lastPrice, lastBid, SnipersTableModel.TextFor(SniperState.Bidding));
         }
 
-        public void HasShownSniperIsWinning(int winningBid)
+        public void HasShownSniperIsWinning(FakeAuctionServer auction, int winningBid)
         {
-            _driver.ShowsSniperStatus(_itemId, winningBid, winningBid, SnipersTableModel.TextFor(SniperState.Winning));
+            _driver.ShowsSniperStatus(auction.ItemId, winningBid, winningBid, SnipersTableModel.TextFor(SniperState.Winning));
         }
 
-        public void ShowsSniperHasWonAuction(int lastPrice)
+        public void ShowsSniperHasWonAuction(FakeAuctionServer auction, int lastPrice)
         {
-            _driver.ShowsSniperStatus(_itemId, lastPrice, lastPrice, SnipersTableModel.TextFor(SniperState.Won));
+            _driver.ShowsSniperStatus(auction.ItemId, lastPrice, lastPrice, SnipersTableModel.TextFor(SniperState.Won));
         }
     }
 }
