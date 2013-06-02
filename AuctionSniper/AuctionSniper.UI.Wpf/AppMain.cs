@@ -1,5 +1,4 @@
-﻿using System;
-using AuctionSniper.Domain;
+﻿using AuctionSniper.Domain;
 using AuctionSniper.XMPP;
 
 namespace AuctionSniper.UI.Wpf
@@ -55,6 +54,8 @@ namespace AuctionSniper.UI.Wpf
 
         private void JoinAuction(string itemId)
         {
+            SafelyAddItemToModel(itemId);
+
             var chat = _connection.GetChatManager()
                                  .CreateChat(AuctionId(itemId), null);
 
@@ -64,6 +65,11 @@ namespace AuctionSniper.UI.Wpf
                     _connection.User, 
                     new Sniper(auction, new SniperListener(_ui.Dispatcher, _snipers), itemId)).ProcessMessage);
             auction.Join();
+        }
+
+        private void SafelyAddItemToModel(string itemId)
+        {
+            _ui.Dispatcher.Invoke(() => _snipers.AddSniper(SniperSnapshot.Joining(itemId)));
         }
     }
 }

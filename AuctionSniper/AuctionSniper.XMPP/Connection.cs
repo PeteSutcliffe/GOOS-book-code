@@ -35,6 +35,11 @@ namespace AuctionSniper.XMPP
             return string.Format(@".\private$\{0}", userName);
         }
 
+        private static string RemoveChannelInfo(string channelName)
+        {
+            return channelName.Replace(@".\private$\", "");
+        }
+
         public void Connect()
         {
             _inputChannel = InitializeQueue(_inputChannelName);
@@ -53,10 +58,10 @@ namespace AuctionSniper.XMPP
             switch (extension.MessageType)
             {
                 case MessageInfo.MessageTypes.CreateChat:
-                    GetChatManager().ReceiveChat(extension.MessageFrom);
+                    GetChatManager().ReceiveChat(RemoveChannelInfo(extension.MessageFrom));
                     break;
                 case MessageInfo.MessageTypes.Message:
-                    GetChatManager().MessageReceived(new Message(message.Body.ToString()), extension.MessageTo);
+                    GetChatManager().MessageReceived(new Message(message.Body.ToString()), RemoveChannelInfo(extension.MessageFrom));
                     break;
             }
 

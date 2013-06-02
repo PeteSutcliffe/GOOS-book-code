@@ -7,10 +7,7 @@ namespace AuctionSniper.XMPP
     {
         readonly List<Action<Chat>> _chatListeners = new List<Action<Chat>>();
 
-        //todo: use these 2 as a dictionary for multiple chats?
-        private Chat _chat;
-
-        private string _messageFrom;
+        private readonly Dictionary<string, Chat> _chats = new Dictionary<string, Chat>();
 
         private readonly Connection _connection;
 
@@ -24,6 +21,24 @@ namespace AuctionSniper.XMPP
             _chatListeners.Add(chatCreated);
         }
 
+        public Chat CreateChat(string recipient, Action<Chat, Message> listener)
+        {
+            _connection.SendCreateMessage(recipient);
+            CreateChatFrom(recipient);
+            _chats[recipient].AddMessageListener(listener);
+            return _chats[recipient];
+        }
+
+        public void MessageReceived(Message message, string chatParticipant)
+        {
+            _chats[chatParticipant].MessageReceived(message);
+        }
+
+        public void ReceiveChat(string messageFrom)
+        {
+            CreateChatFrom(messageFrom);
+        }
+
         internal void SendMessage(Message message, string participant)
         {
             _connection.SendMessage(message, participant);
@@ -31,34 +46,15 @@ namespace AuctionSniper.XMPP
 
         private void CreateChatFrom(string messageFrom)
         {
-            _messageFrom = messageFrom;
-
-            //todo: allow multiple chats
-            if (_chat != null)
+            if (_chats.ContainsKey(messageFrom))
             {
                 throw new InvalidOperationException("Chat already exists");
             }
 
-            _chat = new Chat(this, messageFrom);
-            _chatListeners.ForEach(c => c(_chat));
-        }
+            var chat = new Chat(this, messageFrom);
+            _chatListeners.ForEach(c => c(chat));
 
-        public Chat CreateChat(string recipient, Action<Chat, Message> listener)
-        {
-            _connection.SendCreateMessage(recipient);
-            CreateChatFrom(recipient);
-            _chat.AddMessageListener(listener);
-            return _chat;
-        }
-
-        public void MessageReceived(Message message, string messageTo)
-        {
-            _chat.MessageReceived(message);
-        }
-
-        public void ReceiveChat(string recipient)
-        {
-            CreateChatFrom(recipient);
-        }
+            _chats.Add(messageFrom, chat);
+        }        
     }
 }
