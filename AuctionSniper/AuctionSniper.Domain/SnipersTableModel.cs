@@ -6,11 +6,6 @@ namespace AuctionSniper.Domain
 {
     public class SnipersTableModel : ObservableCollection<SnipersTableModel.TableItem>
     {
-        public SnipersTableModel()
-        {
-            //Add(new TableItem(SniperSnapshot.Joining("")));
-        }
-
         public void SniperStatusChanged(SniperSnapshot newSnapshot)
         {            
             int row = GetRowForSniper(newSnapshot);
@@ -28,9 +23,9 @@ namespace AuctionSniper.Domain
             return TableItem.TextFor(state);
         }
 
-        public void AddSniper(SniperSnapshot joining)
+        public void AddSniper(SniperSnapshot state)
         {
-            Add(new TableItem(joining));
+            Add(new TableItem(state));
         }
 
         public class TableItem
