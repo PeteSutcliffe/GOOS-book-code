@@ -33,6 +33,7 @@ namespace AuctionSniper.UI.Wpf
             _ui = new SniperWindow(_snipers);
             _ui.Show();
             _ui.Closing += UiClosing;
+            _ui.SetUserRequestListener(JoinAuction);
         }
 
         void UiClosing(object sender, System.ComponentModel.CancelEventArgs e)

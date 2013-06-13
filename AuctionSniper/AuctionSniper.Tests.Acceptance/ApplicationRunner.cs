@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Threading;
 using AuctionSniper.Domain;
 using White.Core;
 
@@ -25,20 +26,24 @@ namespace AuctionSniper.Tests.Acceptance
 
             foreach (var auction in auctions)
             {
+                _driver.StartBiddingFor(auction.ItemId);
                 _driver.ShowsSniperStatus(auction.ItemId, 0, 0, SnipersTableModel.TextFor(SniperState.Joining));                
             }
         }
 
         private static string Arguments(IEnumerable<FakeAuctionServer> auctions)
         {
-            return string.Format("broker_channel {0} {1}", SniperXmppId, 
-                string.Join(" ", auctions.Select(a => a.ItemId)));
+            return string.Format("broker_channel {0}", SniperXmppId);
+
+            //return string.Format("broker_channel {0} {1}", SniperXmppId, 
+            //    string.Join(" ", auctions.Select(a => a.ItemId)));
         }
 
         public void Stop()
         {
             _application.Close();
             _application.Dispose();
+            Thread.Sleep(100);
         }
 
         public void ShowsSniperHasLostAuction(FakeAuctionServer auction, int lastPrice, int lastBid)
