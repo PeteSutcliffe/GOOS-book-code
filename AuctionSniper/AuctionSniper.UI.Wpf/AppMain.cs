@@ -1,11 +1,11 @@
-﻿using AuctionSniper.Domain;
+﻿using System;
+using AuctionSniper.Domain;
 using AuctionSniper.XMPP;
 
 namespace AuctionSniper.UI.Wpf
 {
     public class AppMain
     {
-        private readonly Connection _connection;
         private readonly SniperWindow _ui;
 
         private const int ArgHostName = 0;
@@ -13,6 +13,7 @@ namespace AuctionSniper.UI.Wpf
         private const string ItemIdAsLogin = "auction-{0}";
 
         readonly SnipersTableModel _snipers = new SnipersTableModel();
+        private Action _closeAction;
 
         public static void Run(string[] args)
         {                                    
@@ -21,24 +22,25 @@ namespace AuctionSniper.UI.Wpf
 
             var connection = ConnectTo(hostName, userName);
             var appMain = new AppMain(connection);
-            for (var i = 2; i < args.Length; i++)
-            {
-                appMain.JoinAuction(args[i]);
-            }
+            appMain.OnUiClosing(connection.Disconnect);
+        }
+
+        private void OnUiClosing(Action closeAction)
+        {
+            _closeAction = closeAction;
         }
 
         public AppMain(Connection connection)
         {
-            _connection = connection;
             _ui = new SniperWindow(_snipers);
             _ui.Show();
             _ui.Closing += UiClosing;
-            _ui.SetUserRequestListener(JoinAuction);
+            AddRequestListenerFor(connection);
         }
 
         void UiClosing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            _connection.Disconnect();
+            _closeAction.Invoke();
         }
 
         private static Connection ConnectTo(string hostName, string userName)
@@ -53,19 +55,22 @@ namespace AuctionSniper.UI.Wpf
             return string.Format(ItemIdAsLogin, itemId);
         }
 
-        private void JoinAuction(string itemId)
+        private void AddRequestListenerFor(Connection connection)
         {
-            _snipers.AddSniper(SniperSnapshot.Joining(itemId));
+            _ui.SetUserRequestListener(itemId =>
+                {
+                    _snipers.AddSniper(SniperSnapshot.Joining(itemId));
 
-            var chat = _connection.GetChatManager()
-                                 .CreateChat(AuctionId(itemId), null);
+                    var chat = connection.GetChatManager()
+                                         .CreateChat(AuctionId(itemId), null);
 
-            var auction = new XMPPAuction(chat);
-            chat.AddMessageListener(
-                new AuctionMessageTranslator(
-                    _connection.User, 
-                    new Sniper(auction, new SniperListener(_ui.Dispatcher, _snipers), itemId)).ProcessMessage);
-            auction.Join();
+                    var auction = new XMPPAuction(chat);
+                    chat.AddMessageListener(
+                        new AuctionMessageTranslator(
+                            connection.User,
+                            new Sniper(auction, new SniperListener(_ui.Dispatcher, _snipers), itemId)).ProcessMessage);
+                    auction.Join();
+                });
         }
     }
 }
