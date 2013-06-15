@@ -55,7 +55,7 @@ namespace AuctionSniper.UI.Wpf
 
         private void JoinAuction(string itemId)
         {
-            SafelyAddItemToModel(itemId);
+            _snipers.AddSniper(SniperSnapshot.Joining(itemId));
 
             var chat = _connection.GetChatManager()
                                  .CreateChat(AuctionId(itemId), null);
@@ -66,11 +66,6 @@ namespace AuctionSniper.UI.Wpf
                     _connection.User, 
                     new Sniper(auction, new SniperListener(_ui.Dispatcher, _snipers), itemId)).ProcessMessage);
             auction.Join();
-        }
-
-        private void SafelyAddItemToModel(string itemId)
-        {
-            _ui.Dispatcher.Invoke(() => _snipers.AddSniper(SniperSnapshot.Joining(itemId)));
         }
     }
 }
