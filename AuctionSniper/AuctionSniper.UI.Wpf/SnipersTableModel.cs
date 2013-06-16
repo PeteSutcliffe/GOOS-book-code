@@ -6,11 +6,6 @@ using AuctionSniper.Domain;
 
 namespace AuctionSniper.UI.Wpf
 {
-    public interface IPortfolioListener
-    {
-        void SniperAdded(Sniper sniper);
-    }
-
     public class SnipersTableModel : ObservableCollection<SnipersTableModel.TableItem>, 
         IPortfolioListener
     {
@@ -38,7 +33,7 @@ namespace AuctionSniper.UI.Wpf
             return TableItem.TextFor(state);
         }
 
-        public void AddSniperSnapshot(SniperSnapshot state)
+        private void AddSniperSnapshot(SniperSnapshot state)
         {
             Add(new TableItem(state));
         }
