@@ -60,6 +60,7 @@
     <Compile Include="AuctionMessageTranslator.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="XMPPAuction.cs" />
+    <Compile Include="XMPPAuctionHouse.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\AuctionSniper.Domain\AuctionSniper.Domain.csproj">

@@ -21,9 +21,10 @@ namespace AuctionSniper.UI.Wpf
             var hostName = args[ArgHostName];
             var userName = args[ArgUserName];
 
-            var connection = ConnectTo(hostName, userName);
-            var appMain = new AppMain(connection);
-            appMain.OnUiClosing(connection.Disconnect);
+            var auctionHouse = new XMPPAuctionHouse(hostName, userName);
+            
+            var appMain = new AppMain();
+            appMain.AddRequestListenerFor(auctionHouse);
         }
 
         private void OnUiClosing(Action closeAction)
@@ -31,33 +32,26 @@ namespace AuctionSniper.UI.Wpf
             _closeAction = closeAction;
         }
 
-        public AppMain(Connection connection)
+        public AppMain()
         {
             _ui = new SniperWindow(_snipers);
             _ui.Show();
             _ui.Closing += UiClosing;
-            AddRequestListenerFor(connection);
         }
 
         void UiClosing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            _closeAction.Invoke();
+            if(_closeAction!=null) 
+                _closeAction.Invoke();
         }
 
-        private static Connection ConnectTo(string hostName, string userName)
-        {
-            var connection = new Connection(hostName, userName);
-            connection.Connect();
-            return connection;
-        }
-
-        private void AddRequestListenerFor(Connection connection)
+        private void AddRequestListenerFor(XMPPAuctionHouse auctionHouse)
         {
             _ui.SetUserRequestListener(itemId =>
                 {
                     _snipers.AddSniper(SniperSnapshot.Joining(itemId));
-                    
-                    var auction = new XMPPAuction(connection, itemId);
+
+                    var auction = auctionHouse.AuctionFor(itemId);
                     auction.AddAuctionEventListener(new Sniper(auction, new SniperListener(_ui.Dispatcher, _snipers),
                         itemId));                    
                     auction.Join();
