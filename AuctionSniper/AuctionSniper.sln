@@ -1,9 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2012
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AuctionSniper.XMPP", "AuctionSniper.XMPP\AuctionSniper.XMPP.csproj", "{406F703A-8848-4438-8D9E-45D051D52123}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Infrastructure.XMPP", "AuctionSniper.XMPP\Infrastructure.XMPP.csproj", "{406F703A-8848-4438-8D9E-45D051D52123}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AuctionSniper.MessageBroker", "AuctionSniper.MessageBroker\AuctionSniper.MessageBroker.csproj", "{A6FD0CBE-7719-4AC5-868E-7D2E07328E4F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Infrastructure.MessageBroker", "AuctionSniper.MessageBroker\Infrastructure.MessageBroker.csproj", "{A6FD0CBE-7719-4AC5-868E-7D2E07328E4F}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AuctionSniper.UI.Wpf", "AuctionSniper.UI.Wpf\AuctionSniper.UI.Wpf.csproj", "{8D12E411-195B-4F7A-9B71-8B22943F6DC6}"
 EndProject

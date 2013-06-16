@@ -71,9 +71,9 @@
     <Compile Include="XMPPAuction.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\AuctionSniper.XMPP\AuctionSniper.XMPP.csproj">
+    <ProjectReference Include="..\AuctionSniper.XMPP\Infrastructure.XMPP.csproj">
       <Project>{406F703A-8848-4438-8D9E-45D051D52123}</Project>
-      <Name>AuctionSniper.XMPP</Name>
+      <Name>Infrastructure.XMPP</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
