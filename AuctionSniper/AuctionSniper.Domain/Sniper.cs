@@ -3,14 +3,18 @@
     public class Sniper : IAuctionEventListener
     {
         private readonly IAuction _auction;
-        private readonly ISniperListener _sniperListener;
+        private ISniperListener _sniperListener;
         private SniperSnapshot _snapshot;
 
-        public Sniper(IAuction auction, ISniperListener sniperListener, string itemId)
+        public Sniper(IAuction auction, string itemId)
         {
             _auction = auction;
-            _sniperListener = sniperListener;
             _snapshot = SniperSnapshot.Joining(itemId);
+        }
+
+        public SniperSnapshot SniperSnapShot
+        {
+            get { return _snapshot; }
         }
 
         public void AuctionClosed()
@@ -34,6 +38,11 @@
             }                    
 
             NotifyChanged();
+        }
+
+        public void AddSniperListener(ISniperListener sniperListener)
+        {
+            _sniperListener = sniperListener;
         }
 
         private void NotifyChanged()

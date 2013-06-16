@@ -1,34 +1,34 @@
-﻿using System.Collections.Generic;
-using System.Windows.Threading;
+﻿using System.Windows.Threading;
 using AuctionSniper.Domain;
 using AuctionSniper.XMPP;
 
 namespace AuctionSniper.UI.Wpf
 {
+    public interface ISniperCollector
+    {
+        void AddSniper(Sniper sniper);
+    }
+
     public class SniperLauncher
     {
         private readonly XMPPAuctionHouse _auctionHouse;
-        private readonly SnipersTableModel _snipers;
-        private readonly IDispatcher _dispatcher;
-        private readonly List<XMPPAuction> _auctions = new List<XMPPAuction>();
 
+        private readonly ISniperCollector _collector;
 
         public SniperLauncher(XMPPAuctionHouse auctionHouse, SnipersTableModel snipers, IDispatcher dispatcher)
         {
             _auctionHouse = auctionHouse;
-            _snipers = snipers;
-            _dispatcher = dispatcher;
+            _collector = snipers;
         }
 
         public void JoinAuction(string itemId)
         {
-            _snipers.AddSniper(SniperSnapshot.Joining(itemId));
-            
             var auction = _auctionHouse.AuctionFor(itemId);
-            _auctions.Add(auction);
 
-            var sniper = new Sniper(auction, new SniperListener(_dispatcher, _snipers), itemId);
+            var sniper = new Sniper(auction, itemId);
             auction.AddAuctionEventListener(sniper);
+            _collector.AddSniper(sniper);
+
             auction.Join();
         }
     }

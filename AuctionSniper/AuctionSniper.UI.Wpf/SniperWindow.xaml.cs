@@ -9,11 +9,10 @@ namespace AuctionSniper.UI.Wpf
     {
         private Action<string> _action;
 
-        public SniperWindow(SnipersTableModel model)
+        public SniperWindow()
         {
             InitializeComponent();
             grid.AutoGeneratingColumn += GridOnAutoGeneratingColumn;
-            grid.ItemsSource = model;
 
             JoinAuction.Click += JoinAuction_Click;
         }        
@@ -31,6 +30,11 @@ namespace AuctionSniper.UI.Wpf
         private void GridOnAutoGeneratingColumn(object sender, DataGridAutoGeneratingColumnEventArgs e)
         {
             e.Column.Header = ((PropertyDescriptor)e.PropertyDescriptor).DisplayName;
+        }
+
+        public void SetDataModel(SnipersTableModel snipers)
+        {
+            grid.ItemsSource = snipers;
         }
     }
 }

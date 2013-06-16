@@ -11,7 +11,8 @@ namespace AuctionSniper.UI.Wpf
         private const int ArgHostName = 0;
         private const int ArgUserName = 1;
 
-        readonly SnipersTableModel _snipers = new SnipersTableModel();
+        readonly SnipersTableModel _snipers;
+
         private Action _closeAction;
 
         public static void Run(string[] args)
@@ -33,9 +34,11 @@ namespace AuctionSniper.UI.Wpf
 
         public AppMain()
         {
-            _ui = new SniperWindow(_snipers);
+            _ui = new SniperWindow();
+            _snipers = new SnipersTableModel(new WpfDispatcher(_ui.Dispatcher));
+            _ui.SetDataModel(_snipers);
             _ui.Show();
-            _ui.Closing += UiClosing;
+            _ui.Closing += UiClosing;            
         }
 
         void UiClosing(object sender, System.ComponentModel.CancelEventArgs e)

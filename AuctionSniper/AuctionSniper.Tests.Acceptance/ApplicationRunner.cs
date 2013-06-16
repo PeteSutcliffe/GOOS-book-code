@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Threading;
 using AuctionSniper.Domain;
+using AuctionSniper.UI.Wpf;
 using White.Core;
 
 namespace AuctionSniper.Tests.Acceptance

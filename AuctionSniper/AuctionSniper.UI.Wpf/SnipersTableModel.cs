@@ -1,11 +1,22 @@
-﻿using System.Collections.ObjectModel;
+﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
+using AuctionSniper.Domain;
 
-namespace AuctionSniper.Domain
+namespace AuctionSniper.UI.Wpf
 {
-    public class SnipersTableModel : ObservableCollection<SnipersTableModel.TableItem>
+    public class SnipersTableModel : ObservableCollection<SnipersTableModel.TableItem>, ISniperCollector
     {
+        private IDispatcher _dispatcher;
+        
+        private readonly List<Sniper> _snipers = new List<Sniper>();
+
+        public SnipersTableModel(IDispatcher dispatcher)
+        {
+            _dispatcher = dispatcher;
+        }
+
         public void SniperStatusChanged(SniperSnapshot newSnapshot)
         {            
             int row = GetRowForSniper(newSnapshot);
@@ -23,9 +34,16 @@ namespace AuctionSniper.Domain
             return TableItem.TextFor(state);
         }
 
-        public void AddSniper(SniperSnapshot state)
+        public void AddSniperSnapshot(SniperSnapshot state)
         {
             Add(new TableItem(state));
+        }
+
+        public void AddSniper(Sniper sniper)
+        {
+            _snipers.Add(sniper);
+            AddSniperSnapshot(sniper.SniperSnapShot);
+            sniper.AddSniperListener(new SniperListener(_dispatcher, this));
         }
 
         public class TableItem
@@ -62,6 +80,6 @@ namespace AuctionSniper.Domain
             public int LastBid { get; private set; }           
 
             public string State { get; private set; }            
-        }        
+        }
     }
 }

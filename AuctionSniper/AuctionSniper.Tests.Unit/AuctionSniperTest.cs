@@ -17,7 +17,8 @@ namespace AuctionSniper.Tests.Unit
         {
             _mockSniperListener = new Mock<ISniperListener>();
             _mockAuction = new Mock<IAuction>();
-            _sniper = new Sniper(_mockAuction.Object, _mockSniperListener.Object, ItemId);
+            _sniper = new Sniper(_mockAuction.Object, ItemId);
+            _sniper.AddSniperListener(_mockSniperListener.Object);
         }
 
         [Test]

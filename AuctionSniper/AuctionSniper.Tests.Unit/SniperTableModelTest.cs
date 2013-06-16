@@ -1,4 +1,5 @@
 ﻿using AuctionSniper.Domain;
+using AuctionSniper.UI.Wpf;
 using NUnit.Framework;
 using System;
 
@@ -12,7 +13,7 @@ namespace AuctionSniper.Tests.Unit
         [SetUp]
         public void Setup()
         {
-            _model = new SnipersTableModel();
+            _model = new SnipersTableModel(null);
         }
 
         [Test]
@@ -21,7 +22,7 @@ namespace AuctionSniper.Tests.Unit
             bool changed = false;
             
             var joining = SniperSnapshot.Joining("item123");
-            _model.AddSniper(joining);
+            _model.AddSniperSnapshot(joining);
             _model.CollectionChanged += (sender, args) => changed = true;
 
             _model.SniperStatusChanged(new SniperSnapshot("item123", 555, 666, SniperState.Bidding));
@@ -42,7 +43,7 @@ namespace AuctionSniper.Tests.Unit
             _model.CollectionChanged += (sender, args) => changed = true;
             
             var joining = SniperSnapshot.Joining("item123");
-            _model.AddSniper(joining);
+            _model.AddSniperSnapshot(joining);
 
             Assert.That(changed);
             Assert.That(_model.Count == 1);
