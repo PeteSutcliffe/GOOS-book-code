@@ -14,5 +14,10 @@ namespace AuctionSniper.XMPP
         {
             return new XMPPAuction(_connection, itemId);
         }
+
+        public void Disconnect()
+        {
+            _connection.Disconnect();
+        }
     }
 }

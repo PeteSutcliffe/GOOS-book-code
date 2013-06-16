@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using AuctionSniper.Domain;
 using AuctionSniper.XMPP;
 
@@ -14,7 +13,6 @@ namespace AuctionSniper.UI.Wpf
 
         readonly SnipersTableModel _snipers = new SnipersTableModel();
         private Action _closeAction;
-        private readonly List<XMPPAuction> _auctions = new List<XMPPAuction>();
 
         public static void Run(string[] args)
         {                                    
@@ -25,6 +23,7 @@ namespace AuctionSniper.UI.Wpf
             
             var appMain = new AppMain();
             appMain.AddRequestListenerFor(auctionHouse);
+            appMain.OnUiClosing(auctionHouse.Disconnect);
         }
 
         private void OnUiClosing(Action closeAction)
@@ -47,16 +46,9 @@ namespace AuctionSniper.UI.Wpf
 
         private void AddRequestListenerFor(XMPPAuctionHouse auctionHouse)
         {
-            _ui.SetUserRequestListener(itemId =>
-                {
-                    _snipers.AddSniper(SniperSnapshot.Joining(itemId));
+            var launcher = new SniperLauncher(auctionHouse, _snipers, _ui.Dispatcher);
 
-                    var auction = auctionHouse.AuctionFor(itemId);
-                    auction.AddAuctionEventListener(new Sniper(auction, new SniperListener(_ui.Dispatcher, _snipers),
-                        itemId));                    
-                    auction.Join();
-                    _auctions.Add(auction);
-                });
+            _ui.SetUserRequestListener(launcher.JoinAuction);
         }
     }
 }
