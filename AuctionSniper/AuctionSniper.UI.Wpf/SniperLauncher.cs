@@ -1,5 +1,4 @@
-﻿using System.Windows.Threading;
-using AuctionSniper.Domain;
+﻿using AuctionSniper.Domain;
 using AuctionSniper.XMPP;
 
 namespace AuctionSniper.UI.Wpf

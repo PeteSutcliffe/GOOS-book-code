@@ -76,9 +76,6 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="IPortfolioListener.cs" />
-    <Compile Include="ISniperCollector.cs" />
-    <Compile Include="SniperPortfolio.cs" />
     <Compile Include="SnipersTableModel.cs" />
     <Compile Include="WpfDispatcher.cs" />
     <Page Include="SniperWindow.xaml">

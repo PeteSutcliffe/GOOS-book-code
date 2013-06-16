@@ -35,7 +35,6 @@ namespace AuctionSniper.UI.Wpf
             e.Column.Header = ((PropertyDescriptor)e.PropertyDescriptor).DisplayName;
         }
 
-
         private SnipersTableModel CreateTableModel(SniperPortfolio portfolio)
         {
             var model = new SnipersTableModel(new WpfDispatcher(Dispatcher));

@@ -1,5 +1,4 @@
 ﻿using AuctionSniper.Domain;
-using AuctionSniper.UI.Wpf;
 using AuctionSniper.XMPP;
 using NUnit.Framework;
 using NUnit.Framework.Constraints;

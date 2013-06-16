@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
-using AuctionSniper.Domain;
 
-namespace AuctionSniper.UI.Wpf
+namespace AuctionSniper.Domain
 {
     public class SniperPortfolio : ISniperCollector
     {

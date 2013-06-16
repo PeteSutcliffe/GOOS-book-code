@@ -1,5 +1,4 @@
 ﻿using System.Diagnostics;
-using System.Linq;
 using System.Threading;
 using AuctionSniper.Domain;
 using AuctionSniper.UI.Wpf;

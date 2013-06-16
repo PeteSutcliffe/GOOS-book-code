@@ -1,5 +1,4 @@
-﻿using System.Windows.Threading;
-using AuctionSniper.Domain;
+﻿using AuctionSniper.Domain;
 
 namespace AuctionSniper.UI.Wpf
 {
