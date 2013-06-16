@@ -86,6 +86,7 @@
     </Compile>
     <Compile Include="AppMain.cs" />
     <Compile Include="Properties\Annotations.cs" />
+    <Compile Include="SniperLauncher.cs" />
     <Compile Include="SniperListener.cs" />
     <Compile Include="SniperWindow.xaml.cs">
       <DependentUpon>SniperWindow.xaml</DependentUpon>
