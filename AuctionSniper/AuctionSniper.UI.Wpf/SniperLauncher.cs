@@ -4,18 +4,13 @@ using AuctionSniper.XMPP;
 
 namespace AuctionSniper.UI.Wpf
 {
-    public interface ISniperCollector
-    {
-        void AddSniper(Sniper sniper);
-    }
-
     public class SniperLauncher
     {
         private readonly XMPPAuctionHouse _auctionHouse;
 
         private readonly ISniperCollector _collector;
 
-        public SniperLauncher(XMPPAuctionHouse auctionHouse, SnipersTableModel snipers, IDispatcher dispatcher)
+        public SniperLauncher(XMPPAuctionHouse auctionHouse, ISniperCollector snipers)
         {
             _auctionHouse = auctionHouse;
             _collector = snipers;

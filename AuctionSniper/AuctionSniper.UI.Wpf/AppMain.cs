@@ -1,5 +1,4 @@
 ﻿using System;
-using AuctionSniper.Domain;
 using AuctionSniper.XMPP;
 
 namespace AuctionSniper.UI.Wpf
@@ -11,9 +10,9 @@ namespace AuctionSniper.UI.Wpf
         private const int ArgHostName = 0;
         private const int ArgUserName = 1;
 
-        readonly SnipersTableModel _snipers;
-
         private Action _closeAction;
+
+        private readonly SniperPortfolio _portfolio = new SniperPortfolio();
 
         public static void Run(string[] args)
         {                                    
@@ -34,9 +33,7 @@ namespace AuctionSniper.UI.Wpf
 
         public AppMain()
         {
-            _ui = new SniperWindow();
-            _snipers = new SnipersTableModel(new WpfDispatcher(_ui.Dispatcher));
-            _ui.SetDataModel(_snipers);
+            _ui = new SniperWindow(_portfolio);
             _ui.Show();
             _ui.Closing += UiClosing;            
         }
@@ -49,9 +46,9 @@ namespace AuctionSniper.UI.Wpf
 
         private void AddRequestListenerFor(XMPPAuctionHouse auctionHouse)
         {
-            var launcher = new SniperLauncher(auctionHouse, _snipers, new WpfDispatcher(_ui.Dispatcher));
+            var launcher = new SniperLauncher(auctionHouse, _portfolio);
 
             _ui.SetUserRequestListener(launcher.JoinAuction);
-        }
+        }        
     }
 }

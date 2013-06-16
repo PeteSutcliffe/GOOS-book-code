@@ -6,12 +6,16 @@ using AuctionSniper.Domain;
 
 namespace AuctionSniper.UI.Wpf
 {
-    public class SnipersTableModel : ObservableCollection<SnipersTableModel.TableItem>, ISniperCollector
+    public interface IPortfolioListener
     {
-        private IDispatcher _dispatcher;
-        
-        private readonly List<Sniper> _snipers = new List<Sniper>();
+        void SniperAdded(Sniper sniper);
+    }
 
+    public class SnipersTableModel : ObservableCollection<SnipersTableModel.TableItem>, 
+        IPortfolioListener
+    {
+        private readonly IDispatcher _dispatcher;
+        
         public SnipersTableModel(IDispatcher dispatcher)
         {
             _dispatcher = dispatcher;
@@ -39,9 +43,8 @@ namespace AuctionSniper.UI.Wpf
             Add(new TableItem(state));
         }
 
-        public void AddSniper(Sniper sniper)
+        public void SniperAdded(Sniper sniper)
         {
-            _snipers.Add(sniper);
             AddSniperSnapshot(sniper.SniperSnapShot);
             sniper.AddSniperListener(new SniperListener(_dispatcher, this));
         }

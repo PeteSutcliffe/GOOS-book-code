@@ -9,12 +9,15 @@ namespace AuctionSniper.UI.Wpf
     {
         private Action<string> _action;
 
-        public SniperWindow()
+        public SniperWindow(SniperPortfolio portfolio)
         {
             InitializeComponent();
+
             grid.AutoGeneratingColumn += GridOnAutoGeneratingColumn;
 
             JoinAuction.Click += JoinAuction_Click;
+
+            grid.ItemsSource = CreateTableModel(portfolio);
         }        
 
         public void SetUserRequestListener(Action<string> action)
@@ -32,9 +35,13 @@ namespace AuctionSniper.UI.Wpf
             e.Column.Header = ((PropertyDescriptor)e.PropertyDescriptor).DisplayName;
         }
 
-        public void SetDataModel(SnipersTableModel snipers)
+
+        private SnipersTableModel CreateTableModel(SniperPortfolio portfolio)
         {
-            grid.ItemsSource = snipers;
+            var model = new SnipersTableModel(new WpfDispatcher(Dispatcher));
+            portfolio.AddPortfolioListener(model);
+
+            return model;
         }
     }
 }
