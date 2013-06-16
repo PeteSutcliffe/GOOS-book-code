@@ -123,6 +123,10 @@
       <Project>{EA86A6FD-38A3-48D9-8C45-DE434898D445}</Project>
       <Name>AuctionSniper.Domain</Name>
     </ProjectReference>
+    <ProjectReference Include="..\AuctionSniper.XMPP\AuctionSniper.XMPP.csproj">
+      <Project>{BC3627B1-0E01-4F29-9ABC-EFBE6B86214D}</Project>
+      <Name>AuctionSniper.XMPP</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Infrastructure.XMPP\Infrastructure.XMPP.csproj">
       <Project>{406F703A-8848-4438-8D9E-45D051D52123}</Project>
       <Name>Infrastructure.XMPP</Name>

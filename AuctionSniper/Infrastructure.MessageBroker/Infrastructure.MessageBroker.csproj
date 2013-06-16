@@ -76,7 +76,7 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\AuctionSniper.XMPP\Infrastructure.XMPP.csproj">
+    <ProjectReference Include="..\Infrastructure.XMPP\Infrastructure.XMPP.csproj">
       <Project>{406f703a-8848-4438-8d9e-45d051d52123}</Project>
       <Name>Infrastructure.XMPP</Name>
     </ProjectReference>

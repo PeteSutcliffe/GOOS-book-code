@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Messaging;
 using AuctionSniper.XMPP;
 
-namespace AuctionSniper.MessageBroker
+namespace Infrastructure.MessageBroker
 {
     internal class MessageBroker 
     {

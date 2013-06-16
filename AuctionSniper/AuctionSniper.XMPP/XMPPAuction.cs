@@ -1,6 +1,6 @@
-﻿using AuctionSniper.XMPP;
+using AuctionSniper.Domain;
 
-namespace AuctionSniper.Domain
+namespace AuctionSniper.XMPP
 {
     public class XMPPAuction : IAuction
     {

@@ -1,8 +1,8 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
-using AuctionSniper.XMPP;
+using AuctionSniper.Domain;
 
-namespace AuctionSniper.Domain
+namespace AuctionSniper.XMPP
 {
     public class AuctionMessageTranslator
     {

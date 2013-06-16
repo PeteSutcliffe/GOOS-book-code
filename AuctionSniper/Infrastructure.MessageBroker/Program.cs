@@ -8,9 +8,9 @@ namespace AuctionSniper.MessageBroker
         {
             HostFactory.Run(host =>
             {
-                host.Service<MessageBroker>(service =>
+                host.Service<Infrastructure.MessageBroker.MessageBroker>(service =>
                 {
-                    service.ConstructUsing(name => new MessageBroker(ConfigurationSettings.InBoundChannelName));
+                    service.ConstructUsing(name => new Infrastructure.MessageBroker.MessageBroker(ConfigurationSettings.InBoundChannelName));
                     service.WhenStarted(consumer => consumer.Start());
                     service.WhenContinued(consumer => consumer.Start());
                     service.WhenPaused(consumer => consumer.Pause());

@@ -58,7 +58,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ApplicationConstants.cs" />
-    <Compile Include="AuctionMessageTranslator.cs" />
     <Compile Include="IAuction.cs" />
     <Compile Include="IAuctionEventListener.cs" />
     <Compile Include="ISniperListener.cs" />
@@ -68,7 +67,6 @@
     <Compile Include="SniperSnapshot.cs" />
     <Compile Include="SniperState.cs" />
     <Compile Include="SniperStateExtensions.cs" />
-    <Compile Include="XMPPAuction.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Infrastructure.XMPP\Infrastructure.XMPP.csproj">
