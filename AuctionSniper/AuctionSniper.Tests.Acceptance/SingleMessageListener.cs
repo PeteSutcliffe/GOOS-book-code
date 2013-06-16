@@ -21,7 +21,7 @@ namespace AuctionSniper.Tests.Acceptance
             {
                 throw new Exception("Message did not arrive");
             }
-            //Assert.That(message.Body, messageMatcher);
+            Assert.That(message.Body, messageMatcher);
         }
     }
 }

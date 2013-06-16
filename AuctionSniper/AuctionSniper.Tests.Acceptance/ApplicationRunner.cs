@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.Linq;
 using System.Threading;
 using AuctionSniper.Domain;
@@ -19,7 +18,7 @@ namespace AuctionSniper.Tests.Acceptance
         {
             _application = Application.Launch(
                 new ProcessStartInfo("AuctionSniper.UI.Wpf.exe",
-                                     Arguments(auctions)));
+                                     Arguments()));
             _application.WaitWhileBusy();
             _driver = new AuctionSniperDriver(_application);
             _driver.HasColumnTitles();
@@ -31,12 +30,9 @@ namespace AuctionSniper.Tests.Acceptance
             }
         }
 
-        private static string Arguments(IEnumerable<FakeAuctionServer> auctions)
+        private static string Arguments()
         {
             return string.Format("broker_channel {0}", SniperXmppId);
-
-            //return string.Format("broker_channel {0} {1}", SniperXmppId, 
-            //    string.Join(" ", auctions.Select(a => a.ItemId)));
         }
 
         public void Stop()

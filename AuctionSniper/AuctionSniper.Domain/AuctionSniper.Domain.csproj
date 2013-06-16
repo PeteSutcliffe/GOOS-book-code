@@ -71,7 +71,7 @@
     <Compile Include="XMPPAuction.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\AuctionSniper.XMPP\Infrastructure.XMPP.csproj">
+    <ProjectReference Include="..\Infrastructure.XMPP\Infrastructure.XMPP.csproj">
       <Project>{406F703A-8848-4438-8D9E-45D051D52123}</Project>
       <Name>Infrastructure.XMPP</Name>
     </ProjectReference>

@@ -83,7 +83,7 @@
       <Project>{8d12e411-195b-4f7a-9b71-8b22943f6dc6}</Project>
       <Name>AuctionSniper.UI.Wpf</Name>
     </ProjectReference>
-    <ProjectReference Include="..\AuctionSniper.XMPP\Infrastructure.XMPP.csproj">
+    <ProjectReference Include="..\Infrastructure.XMPP\Infrastructure.XMPP.csproj">
       <Project>{406F703A-8848-4438-8D9E-45D051D52123}</Project>
       <Name>Infrastructure.XMPP</Name>
     </ProjectReference>
