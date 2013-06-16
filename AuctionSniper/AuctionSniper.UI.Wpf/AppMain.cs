@@ -46,7 +46,7 @@ namespace AuctionSniper.UI.Wpf
 
         private void AddRequestListenerFor(XMPPAuctionHouse auctionHouse)
         {
-            var launcher = new SniperLauncher(auctionHouse, _snipers, _ui.Dispatcher);
+            var launcher = new SniperLauncher(auctionHouse, _snipers, new WpfDispatcher(_ui.Dispatcher));
 
             _ui.SetUserRequestListener(launcher.JoinAuction);
         }

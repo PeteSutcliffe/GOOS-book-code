@@ -76,6 +76,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="WpfDispatcher.cs" />
     <Page Include="SniperWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -85,6 +86,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="AppMain.cs" />
+    <Compile Include="IDispatcher.cs" />
     <Compile Include="Properties\Annotations.cs" />
     <Compile Include="SniperLauncher.cs" />
     <Compile Include="SniperListener.cs" />

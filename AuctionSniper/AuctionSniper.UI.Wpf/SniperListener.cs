@@ -5,10 +5,10 @@ namespace AuctionSniper.UI.Wpf
 {
     internal class SniperListener : ISniperListener
     {
-        private readonly Dispatcher _dispatcher;
+        private readonly IDispatcher _dispatcher;
         private readonly SnipersTableModel _model;
 
-        public SniperListener(Dispatcher dispatcher, SnipersTableModel model)
+        public SniperListener(IDispatcher dispatcher, SnipersTableModel model)
         {
             _dispatcher = dispatcher;
             _model = model;
