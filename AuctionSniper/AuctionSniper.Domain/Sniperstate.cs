@@ -5,6 +5,7 @@
         Joining,
         Bidding,
         Winning,
+        Losing,
         Lost,
         Won
     }

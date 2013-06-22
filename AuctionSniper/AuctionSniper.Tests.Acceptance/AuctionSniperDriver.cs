@@ -75,11 +75,15 @@ namespace AuctionSniper.Tests.Acceptance
             return grid;
         }
 
-        public void StartBiddingFor(string itemId)
+        public void StartBiddingFor(string itemId, int stopPrice)
         {
             var window = _application.GetWindow("Auction Sniper Main");
             var textField = window.Get<TextBox>("ItemId");
             textField.SetValue(itemId);
+
+            var stopField = window.Get<TextBox>("StopPrice");
+            stopField.SetValue(stopPrice);
+
             var button = window.Get<Button>("JoinAuction");
             button.Click();
         }

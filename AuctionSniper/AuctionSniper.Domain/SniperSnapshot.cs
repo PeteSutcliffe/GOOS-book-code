@@ -37,17 +37,23 @@ namespace AuctionSniper.Domain
             return new SniperSnapshot(ItemId, LastPrice, LastBid, State.WhenAuctionClosed());
         }
 
+        public SniperSnapshot Losing(int newLastPrice)
+        {
+            return new SniperSnapshot(ItemId, newLastPrice, LastBid, SniperState.Losing);
+        }
+
         #region Equality
+
         protected bool Equals(SniperSnapshot other)
         {
-            return string.Equals(ItemId, other.ItemId) && LastPrice == other.LastPrice && LastBid == other.LastBid;
+            return string.Equals(ItemId, other.ItemId) && LastPrice == other.LastPrice && LastBid == other.LastBid && State == other.State;
         }
 
         public override bool Equals(object obj)
         {
             if (ReferenceEquals(null, obj)) return false;
             if (ReferenceEquals(this, obj)) return true;
-            if (obj.GetType() != GetType()) return false;
+            if (obj.GetType() != this.GetType()) return false;
             return Equals((SniperSnapshot) obj);
         }
 
@@ -58,11 +64,12 @@ namespace AuctionSniper.Domain
                 int hashCode = (ItemId != null ? ItemId.GetHashCode() : 0);
                 hashCode = (hashCode*397) ^ LastPrice;
                 hashCode = (hashCode*397) ^ LastBid;
+                hashCode = (hashCode*397) ^ (int) State;
                 return hashCode;
             }
         }
-        #endregion
 
+        #endregion        
     }
 
     public class DefectException : Exception

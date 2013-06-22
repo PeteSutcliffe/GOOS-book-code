@@ -3,13 +3,15 @@
     public class Sniper : IAuctionEventListener
     {
         private readonly IAuction _auction;
+        private readonly Item _item;
         private ISniperListener _sniperListener;
         private SniperSnapshot _snapshot;
 
-        public Sniper(IAuction auction, string itemId)
+        public Sniper(IAuction auction, Item item)
         {
             _auction = auction;
-            _snapshot = SniperSnapshot.Joining(itemId);
+            _item = item;
+            _snapshot = SniperSnapshot.Joining(item.Identifier);
         }
 
         public SniperSnapshot SniperSnapShot
@@ -32,8 +34,15 @@
                     break;
                 case PriceSource.FromOtherBidder:
                     int bid = price + increment;
-                    _auction.Bid(bid);
-                    _snapshot = _snapshot.Bidding(price, bid);
+                    if (_item.AllowsBid(bid))
+                    {
+                        _auction.Bid(bid);
+                        _snapshot = _snapshot.Bidding(price, bid);
+                    }
+                    else
+                    {
+                        _snapshot = _snapshot.Losing(price);
+                    }
                     break;
             }                    
 

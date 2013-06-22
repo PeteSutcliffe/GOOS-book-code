@@ -1,3 +1,5 @@
+using AuctionSniper.Domain;
+
 namespace AuctionSniper.XMPP
 {
     public class XMPPAuctionHouse
@@ -10,9 +12,9 @@ namespace AuctionSniper.XMPP
             _connection.Connect();
         }
 
-        public XMPPAuction AuctionFor(string itemId)
+        public XMPPAuction AuctionFor(Item item)
         {
-            return new XMPPAuction(_connection, itemId);
+            return new XMPPAuction(_connection, item.Identifier);
         }
 
         public void Disconnect()

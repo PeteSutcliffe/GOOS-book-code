@@ -15,11 +15,11 @@ namespace AuctionSniper.UI.Wpf
             _collector = snipers;
         }
 
-        public void JoinAuction(string itemId)
+        public void JoinAuction(Item item)
         {
-            var auction = _auctionHouse.AuctionFor(itemId);
+            var auction = _auctionHouse.AuctionFor(item);
 
-            var sniper = new Sniper(auction, itemId);
+            var sniper = new Sniper(auction, item);
             auction.AddAuctionEventListener(sniper);
             _collector.AddSniper(sniper);
 

@@ -50,6 +50,7 @@ namespace AuctionSniper.UI.Wpf
                 "Joining", 
                 "Bidding", 
                 "Winning",
+                "Losing",
                 "Lost",
                 "Won"
             };

@@ -12,7 +12,10 @@
                 <ColumnDefinition Width="1*"></ColumnDefinition>
                 <ColumnDefinition Width="1*"></ColumnDefinition>
             </Grid.ColumnDefinitions>
-            <TextBox Grid.Column="0" x:Name="ItemId"></TextBox>
+            <StackPanel Orientation="Horizontal">
+                <TextBox x:Name="ItemId" Width="200"></TextBox>
+                <TextBox x:Name="StopPrice" Width="100"></TextBox>                
+            </StackPanel>            
             <Button Grid.Column="1" x:Name="JoinAuction" Width="100" HorizontalAlignment="Left">Join Auction</Button>
         </Grid>        
         <DataGrid AutoGenerateColumns="True" x:Name="grid" CanUserAddRows="False" Grid.Row="1">

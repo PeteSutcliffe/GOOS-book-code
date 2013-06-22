@@ -12,9 +12,28 @@ namespace AuctionSniper.Tests.Acceptance
 
         private AuctionSniperDriver _driver;
 
-        public const string SniperXmppId = "sniper";
+        public const string SniperXmppId = "sniper";        
 
         public void StartBiddingIn(params FakeAuctionServer[] auctions)
+        {
+            StartApplication();
+
+            foreach (var auction in auctions)
+            {
+                _driver.StartBiddingFor(auction.ItemId, int.MaxValue);
+                _driver.ShowsSniperStatus(auction.ItemId, 0, 0, SnipersTableModel.TextFor(SniperState.Joining));                
+            }
+        }
+
+        public void StartBiddingWithStopPrice(FakeAuctionServer auction, int stopPrice)
+        {
+            StartApplication();
+
+            _driver.StartBiddingFor(auction.ItemId, stopPrice);
+            _driver.ShowsSniperStatus(auction.ItemId, 0, 0, SnipersTableModel.TextFor(SniperState.Joining));
+        }
+
+        private void StartApplication()
         {
             _application = Application.Launch(
                 new ProcessStartInfo("AuctionSniper.UI.Wpf.exe",
@@ -22,12 +41,6 @@ namespace AuctionSniper.Tests.Acceptance
             _application.WaitWhileBusy();
             _driver = new AuctionSniperDriver(_application);
             _driver.HasColumnTitles();
-
-            foreach (var auction in auctions)
-            {
-                _driver.StartBiddingFor(auction.ItemId);
-                _driver.ShowsSniperStatus(auction.ItemId, 0, 0, SnipersTableModel.TextFor(SniperState.Joining));                
-            }
         }
 
         private static string Arguments()
@@ -60,6 +73,11 @@ namespace AuctionSniper.Tests.Acceptance
         public void ShowsSniperHasWonAuction(FakeAuctionServer auction, int lastPrice)
         {
             _driver.ShowsSniperStatus(auction.ItemId, lastPrice, lastPrice, SnipersTableModel.TextFor(SniperState.Won));
+        }
+
+        public void HasShownSniperIsLosing(FakeAuctionServer auction, int lastPrice, int lastBid)
+        {
+            _driver.ShowsSniperStatus(auction.ItemId, lastPrice, lastBid, SnipersTableModel.TextFor(SniperState.Losing));
         }
     }
 }

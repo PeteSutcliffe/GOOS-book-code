@@ -7,7 +7,7 @@ namespace AuctionSniper.UI.Wpf
 {
     public partial class SniperWindow
     {
-        private Action<string> _action;
+        private Action<Item> _action;
 
         public SniperWindow(SniperPortfolio portfolio)
         {
@@ -20,14 +20,14 @@ namespace AuctionSniper.UI.Wpf
             grid.ItemsSource = CreateTableModel(portfolio);
         }        
 
-        public void SetUserRequestListener(Action<string> action)
+        public void SetUserRequestListener(Action<Item> action)
         {
             _action = action;
         }
 
         private void JoinAuction_Click(object sender, System.Windows.RoutedEventArgs e)
         {
-            _action(ItemId.Text);
+            _action(new Item(ItemId.Text, int.Parse(StopPrice.Text)));
         }
 
         private void GridOnAutoGeneratingColumn(object sender, DataGridAutoGeneratingColumnEventArgs e)
