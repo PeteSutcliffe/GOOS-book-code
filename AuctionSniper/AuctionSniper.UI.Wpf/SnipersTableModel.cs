@@ -52,7 +52,8 @@ namespace AuctionSniper.UI.Wpf
                 "Winning",
                 "Losing",
                 "Lost",
-                "Won"
+                "Won",
+                "Failed"
             };
 
             public static string TextFor(SniperState state)

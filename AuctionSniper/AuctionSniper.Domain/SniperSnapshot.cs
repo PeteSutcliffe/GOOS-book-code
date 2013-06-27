@@ -42,6 +42,10 @@ namespace AuctionSniper.Domain
             return new SniperSnapshot(ItemId, newLastPrice, LastBid, SniperState.Losing);
         }
 
+        public SniperSnapshot Failed()
+        {
+            return new SniperSnapshot(ItemId, 0, 0, SniperState.Failed);
+        }
         #region Equality
 
         protected bool Equals(SniperSnapshot other)
@@ -69,7 +73,7 @@ namespace AuctionSniper.Domain
             }
         }
 
-        #endregion        
+        #endregion
     }
 
     public class DefectException : Exception

@@ -49,6 +49,12 @@
             NotifyChanged();
         }
 
+        public void AuctionFailed()
+        {
+            _snapshot = _snapshot.Failed();
+            NotifyChanged();
+        }
+
         public void AddSniperListener(ISniperListener sniperListener)
         {
             _sniperListener = sniperListener;

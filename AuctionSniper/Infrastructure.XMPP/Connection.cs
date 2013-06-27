@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Messaging;
+using Infrastructure.XMPP;
 using MSMQMessage = System.Messaging.Message;
 
 namespace AuctionSniper.XMPP
@@ -52,6 +53,9 @@ namespace AuctionSniper.XMPP
 
         private void OnMessageReceived(object sender, ReceiveCompletedEventArgs results)
         {
+            if(_inputChannel == null)
+                return;
+
             var message = _inputChannel.EndReceive(results.AsyncResult);            
             var extension = message.DeserializeExtension();
 
@@ -65,7 +69,8 @@ namespace AuctionSniper.XMPP
                     break;
             }
 
-            _inputChannel.BeginReceive();
+            if(_inputChannel != null)
+                _inputChannel.BeginReceive();
         }
 
         private MessageQueue InitializeQueue(string inputChannelName)
@@ -121,7 +126,7 @@ namespace AuctionSniper.XMPP
 
         public void Disconnect()
         {
-            _inputChannel.Close();
+            _inputChannel.Close();            
             _inputChannel = null;
             _chatManager = null;
         }

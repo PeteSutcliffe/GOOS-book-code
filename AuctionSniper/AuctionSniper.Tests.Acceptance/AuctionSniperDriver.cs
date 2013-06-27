@@ -1,13 +1,17 @@
 ﻿using System.Text;
+using System.Threading;
 using NUnit.Framework;
 using White.Core;
 using White.Core.UIItems;
+using White.Core.UIItems.WindowItems;
 
 namespace AuctionSniper.Tests.Acceptance
 {
     class AuctionSniperDriver
     {
         private readonly Application _application;
+        private Window _window;
+        private ListView _grid;
 
         public AuctionSniperDriver(Application application)
         {
@@ -21,22 +25,23 @@ namespace AuctionSniper.Tests.Acceptance
 
         public void HasColumnTitles()
         {
-            var grid = FindGrid();
-            Assert.That(grid.Header.Columns[0].Text, Is.EqualTo("Item"));
-            Assert.That(grid.Header.Columns[1].Text, Is.EqualTo("Last Price"));
-            Assert.That(grid.Header.Columns[2].Text, Is.EqualTo("Last Bid"));
-            Assert.That(grid.Header.Columns[3].Text, Is.EqualTo("State"));
+            FindGrid();
+            Assert.That(_grid.Header.Columns[0].Text, Is.EqualTo("Item"));
+            Assert.That(_grid.Header.Columns[1].Text, Is.EqualTo("Last Price"));
+            Assert.That(_grid.Header.Columns[2].Text, Is.EqualTo("Last Bid"));
+            Assert.That(_grid.Header.Columns[3].Text, Is.EqualTo("State"));
         }
 
         private void HasRowWithMatchingCells(params object[] values)
         {
-            var grid = FindGrid();
+            _application.WaitWhileBusy();
+            FindGrid();
 
             bool foundRow = false;
 
-            foreach (var row in grid.Rows)
+            foreach (var row in _grid.Rows)
             {
-                var cells = row.GetCells(grid.Header);
+                var cells = row.GetCells(_grid.Header);
 
                 bool matchedAll = true;
 
@@ -68,11 +73,15 @@ namespace AuctionSniper.Tests.Acceptance
         }
 
 
-        private ListView FindGrid()
+        private void FindGrid()
         {
-            var window = _application.GetWindow("Auction Sniper Main");
-            var grid = window.Get<ListView>("grid");
-            return grid;
+            if (_window == null || _grid == null)
+            {
+                _application.WaitWhileBusy();
+                Thread.Sleep(500);
+                _window = _application.GetWindow("Auction Sniper Main");
+                _grid = _window.Get<ListView>("grid");
+            }
         }
 
         public void StartBiddingFor(string itemId, int stopPrice)

@@ -7,6 +7,7 @@
         Winning,
         Losing,
         Lost,
-        Won
+        Won,
+        Failed
     }
 }

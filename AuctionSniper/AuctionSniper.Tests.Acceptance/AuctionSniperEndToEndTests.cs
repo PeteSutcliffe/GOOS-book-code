@@ -110,7 +110,36 @@ namespace AuctionSniper.Tests.Acceptance
 
             _auction.AnnounceClosed();
             _application.ShowsSniperHasLostAuction(_auction, 1207, 1098);
+        }
 
+        [Test]
+        public void SniperReportsInvalidAuctionMessageAndStopsRespondingToEvents()
+        {
+            const string brokenMessage = "a broken message";
+            _auction.StartSellingItem();
+            _auction2.StartSellingItem();
+
+            _application.StartBiddingIn(_auction, _auction2);
+            _auction.HasReceivedJoinRequestFrom(ApplicationRunner.SniperXmppId);
+
+            _auction.ReportPrice(500, 20, "other bidder");
+            _auction.HasReceivedBid(520, ApplicationRunner.SniperXmppId);
+
+            _auction.SendInvalidMessageContaining(brokenMessage);
+            _application.ShowsSniperHasFailed(_auction);
+
+            _auction.ReportPrice(320, 32, "other bidder");
+            WaitForAnotherAuctionEvent();
+
+            _application.ReportsInvalidMessage(_auction, brokenMessage);
+            _application.ShowsSniperHasFailed(_auction);
+        }
+
+        private void WaitForAnotherAuctionEvent()
+        {
+            _auction2.HasReceivedJoinRequestFrom(ApplicationRunner.SniperXmppId);
+            _auction2.ReportPrice(600, 6, "other bidder");
+            _application.HasShownSniperIsBidding(_auction2, 600, 606);
         }
 
         [TestFixtureTearDown]

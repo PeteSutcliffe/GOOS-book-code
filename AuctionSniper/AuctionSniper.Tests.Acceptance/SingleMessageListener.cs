@@ -1,11 +1,12 @@
 ﻿using System;
 using AuctionSniper.XMPP;
+using Infrastructure.XMPP;
 using NUnit.Framework;
 using NUnit.Framework.Constraints;
 
 namespace AuctionSniper.Tests.Acceptance
 {
-    public class SingleMessageListener
+    public class SingleMessageListener : IChatListener
     {
         readonly ArrayBlockingQueue<Message> _messages = new ArrayBlockingQueue<Message>(1);
 

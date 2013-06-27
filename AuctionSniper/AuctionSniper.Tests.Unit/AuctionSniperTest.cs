@@ -8,7 +8,7 @@ namespace AuctionSniper.Tests.Unit
     public class AuctionSniperTest
     {
         private Sniper _sniper;
-        private Mock<ISniperListener> _mockSniperListener;
+        private MockWithState<ISniperListener> _mockSniperListener;
         private Mock<IAuction> _mockAuction;
         private const string ItemId = "ITEM";
         private const int StopPrice = 1234;
@@ -16,7 +16,7 @@ namespace AuctionSniper.Tests.Unit
         [SetUp]
         public void Setup()
         {
-            _mockSniperListener = new Mock<ISniperListener>();
+            _mockSniperListener = new MockWithState<ISniperListener>();
             _mockAuction = new Mock<IAuction>();
             _sniper = new Sniper(_mockAuction.Object, new Item(ItemId, StopPrice));
             _sniper.AddSniperListener(_mockSniperListener.Object);
@@ -32,21 +32,18 @@ namespace AuctionSniper.Tests.Unit
 
         [Test]
         public void ReportsLostIfAuctionClosesWhenBidding()
-        {
-            // An attempt to emulate the state tracking outlined in the book.
-
-            string state = null;
+        {            
             _mockSniperListener.Allow(l => l.SniperStateChanged(It.Is<SniperSnapshot>(s => s.State == SniperState.Bidding)),
-                               () => state = "bidding");
+                               "bidding");
 
-            _mockSniperListener.RestrictState(l => l.SniperStateChanged(It.Is<SniperSnapshot>(s => s.State == SniperState.Lost)),
-                               () => Assert.That(state, Is.EqualTo("bidding")));
+            _mockSniperListener.RestrictState(
+                l => l.SniperStateChanged(It.Is<SniperSnapshot>(s => s.State == SniperState.Lost)),
+                "bidding");
 
             _sniper.CurrentPrice(123, 45, PriceSource.FromOtherBidder);
             _sniper.AuctionClosed();
 
-            _mockSniperListener.Verify(l => l.SniperStateChanged(It.Is<SniperSnapshot>(s => s.State == SniperState.Lost)), 
-                Times.AtLeastOnce());
+            _mockSniperListener.VerifyRestrictedActions();
         }
 
         [Test]
@@ -65,57 +62,46 @@ namespace AuctionSniper.Tests.Unit
         [Test]
         public void ReportsIsWinningWhenCurrentPriceComesFromSniper()
         {
-            string state = null;            
-
             _mockSniperListener.Allow(l => l.SniperStateChanged(It.Is<SniperSnapshot>(s => s.State == SniperState.Bidding)),
-                () => state = "bidding");
+                "bidding");
 
             _mockSniperListener.RestrictState(l => l.SniperStateChanged(It.Is<SniperSnapshot>(s => s.State == SniperState.Winning)),
-                () => Assert.That(state, Is.EqualTo("bidding"), "SUT was not in the correct state"));
+                "bidding");
 
             _sniper.CurrentPrice(123, 12, PriceSource.FromOtherBidder);
             _sniper.CurrentPrice(135, 45, PriceSource.FromSniper);
 
-            _mockSniperListener.Verify(l => 
-                l.SniperStateChanged(new SniperSnapshot(ItemId, 135, 135, SniperState.Winning)), Times.AtLeastOnce());
+            _mockSniperListener.VerifyRestrictedActions();
         }
 
         [Test]
         public void ReportsWonIfAuctionClosesWhenWinning()
         {
-            string state = null;
-
             _mockSniperListener.Allow(l => l.SniperStateChanged(It.Is<SniperSnapshot>(s => s.State == SniperState.Winning)),
-                () => state = "winning");
+                "winning");
 
             _mockSniperListener.RestrictState(l => l.SniperStateChanged(It.Is<SniperSnapshot>(s => s.State == SniperState.Won)),
-                               () => Assert.That(state, Is.EqualTo("winning")));
+                               "winning");
 
             _sniper.CurrentPrice(123, 45, PriceSource.FromSniper);
             _sniper.AuctionClosed();
 
-            _mockSniperListener.Verify(l => l.SniperStateChanged(It.Is<SniperSnapshot>(s => s.State == SniperState.Won)), 
-                Times.AtLeastOnce());
+            _mockSniperListener.VerifyRestrictedActions();
         }
 
         [Test]
         public void DoesNotBidAndReportsLosingIfSubsequentPriceIsAboveStopPrice()
         {
-            string state = null;
-
             _mockSniperListener.Allow(l => l.SniperStateChanged(It.Is<SniperSnapshot>(s => s.State == SniperState.Bidding)),
-                () => state = "bidding");
-
-            const int bid = 123 + 45;
+                "bidding");
 
             _mockSniperListener.RestrictState(l => l.SniperStateChanged(It.Is<SniperSnapshot>(s => s.State == SniperState.Losing)),
-                () => Assert.That(state, Is.EqualTo("bidding"), "SUT was not in the correct state"));
+                "bidding");
 
             _sniper.CurrentPrice(123, 45, PriceSource.FromOtherBidder);
             _sniper.CurrentPrice(2345, 25, PriceSource.FromOtherBidder);
 
-            _mockSniperListener.Verify(l => l.SniperStateChanged(new SniperSnapshot(ItemId, 2345, bid, SniperState.Losing)),
-                Times.AtLeastOnce());
+            _mockSniperListener.VerifyRestrictedActions();
         }
 
         [Test]
@@ -131,20 +117,17 @@ namespace AuctionSniper.Tests.Unit
         [Test]
         public void ReportsLostIfAuctionClosesWhenLosing()
         {
-            string state = null;
-
             _mockSniperListener.Allow(l => l.SniperStateChanged(It.Is<SniperSnapshot>(s => s.State == SniperState.Losing)),
-                () => state = "losing");
+                "losing");
 
             _mockSniperListener.RestrictState(l => l.SniperStateChanged(It.Is<SniperSnapshot>(s => s.State == SniperState.Lost)),
-                () => Assert.That(state, Is.EqualTo("losing"), "SUT was not in the correct state"));
+                "losing");
 
             _sniper.CurrentPrice(2345, 25, PriceSource.FromOtherBidder);
 
             _sniper.AuctionClosed();
 
-            _mockSniperListener.Verify(l => l.SniperStateChanged(new SniperSnapshot(ItemId, 2345, 0, SniperState.Lost)),
-                Times.AtLeastOnce());
+            _mockSniperListener.VerifyRestrictedActions();
         }
 
         [Test]
@@ -164,20 +147,34 @@ namespace AuctionSniper.Tests.Unit
         [Test]
         public void DoesNoBidAndReportsLosingIfPriceAfterWinningIsAboveStopPrice()
         {
-            string state = null;
-
             _mockSniperListener.Allow(l => l.SniperStateChanged(It.Is<SniperSnapshot>(s => s.State == SniperState.Winning)),
-                () => state = "winning");
+                "winning");
 
-            _mockSniperListener.RestrictState(l => l.SniperStateChanged(It.Is<SniperSnapshot>(s => s.State == SniperState.Losing)),
-                () => Assert.That(state, Is.EqualTo("winning"), "SUT was not in the correct state"));
+            _mockSniperListener.RestrictState(
+                l => l.SniperStateChanged(It.Is<SniperSnapshot>(s => s.State == SniperState.Losing)),
+                "winning");
 
             _sniper.CurrentPrice(234, 45, PriceSource.FromSniper);
 
             _sniper.CurrentPrice(2345, 25, PriceSource.FromOtherBidder);
 
-            _mockSniperListener.Verify(l => l.SniperStateChanged(new SniperSnapshot(ItemId, 2345, 0, SniperState.Losing)),
-                Times.AtLeastOnce());
+            _mockSniperListener.VerifyRestrictedActions();
+        }
+
+        [Test]
+        public void ReportsFailedIfAuctionFailsWhenBidding()
+        {
+            _mockSniperListener.Allow(l => l.SniperStateChanged(It.Is<SniperSnapshot>(s => s.State == SniperState.Bidding)),
+                "bidding");
+
+            _mockSniperListener.RestrictState(
+                l => l.SniperStateChanged(It.Is<SniperSnapshot>(s => s.State == SniperState.Failed)),
+                "bidding");
+
+            _sniper.CurrentPrice(123, 45, PriceSource.FromOtherBidder);
+            _sniper.AuctionFailed();
+
+            _mockSniperListener.VerifyRestrictedActions();
         }
     }
 }

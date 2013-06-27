@@ -1,8 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using AuctionSniper.XMPP;
 
-namespace AuctionSniper.XMPP
+namespace Infrastructure.XMPP
 {
+    public interface IChatListener
+    {
+        void ProcessMessage(Chat chat, Message message);
+    }
+
     public class ChatManager
     {
         readonly List<Action<Chat>> _chatListeners = new List<Action<Chat>>();
@@ -21,7 +27,7 @@ namespace AuctionSniper.XMPP
             _chatListeners.Add(chatCreated);
         }
 
-        public Chat CreateChat(string recipient, Action<Chat, Message> listener)
+        public Chat CreateChat(string recipient, IChatListener listener)
         {
             _connection.SendCreateMessage(recipient);
             CreateChatFrom(recipient);

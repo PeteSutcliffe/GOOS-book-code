@@ -1,13 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
+using AuctionSniper.XMPP;
 
-namespace AuctionSniper.XMPP
+namespace Infrastructure.XMPP
 {
     public class Chat
     {
         private readonly ChatManager _manager;
 
-        readonly List<Action<Chat, Message>> _messageListeners = new List<Action<Chat, Message>>();
+        readonly List<IChatListener> _messageListeners = new List<IChatListener>();
+
         private readonly string _participant;
 
         public Chat(ChatManager manager, string participant)
@@ -21,7 +23,7 @@ namespace AuctionSniper.XMPP
             get { return _participant; }
         }
 
-        public void AddMessageListener(Action<Chat, Message> messageListener)
+        public void AddMessageListener(IChatListener messageListener)
         {
             if(messageListener != null)
                 _messageListeners.Add(messageListener);
@@ -29,7 +31,10 @@ namespace AuctionSniper.XMPP
 
         internal void MessageReceived(Message message)
         {
-            _messageListeners.ForEach(l => l(this, message));
+            lock (_messageListeners)
+            {
+                _messageListeners.ForEach(l => l.ProcessMessage(this, message));                    
+            }
         }
 
         public void SendMessage(Message message)
@@ -40,6 +45,17 @@ namespace AuctionSniper.XMPP
         public void SendMessage(string message)
         {
             _manager.SendMessage(new Message(message), _participant);
+        }
+
+        public void RemoveMessageTranslator(IChatListener listener)
+        {
+                Task.Run(() =>
+                {
+                    lock (_messageListeners)
+                    {
+                        _messageListeners.Remove(listener);                        
+                    }
+                });
         }
     }
 }

@@ -67,9 +67,9 @@
   <ItemGroup>
     <Compile Include="AuctionMessageTranslatorTest.cs" />
     <Compile Include="AuctionSniperTest.cs" />
+    <Compile Include="MockWithState.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SniperTableModelTest.cs" />
-    <Compile Include="StateExtensions.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

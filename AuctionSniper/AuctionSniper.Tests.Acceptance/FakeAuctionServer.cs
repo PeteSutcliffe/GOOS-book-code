@@ -1,5 +1,6 @@
 ﻿using AuctionSniper.Domain;
 using AuctionSniper.XMPP;
+using Infrastructure.XMPP;
 using NUnit.Framework;
 using NUnit.Framework.Constraints;
 
@@ -36,7 +37,7 @@ namespace AuctionSniper.Tests.Acceptance
             _connection.GetChatManager().AddChatListener(chat =>
             {
                 _currentChat = chat;
-                _currentChat.AddMessageListener(_messageListener.ProcessMessage);
+                _currentChat.AddMessageListener(_messageListener);
             });
         }
 
@@ -65,6 +66,11 @@ namespace AuctionSniper.Tests.Acceptance
         {
             var equalConstraint = Is.EqualTo(string.Format(ApplicationConstants.BidFormat, bid));
             ReceivesAMessageMatching(sniperId, equalConstraint);
+        }
+
+        public void SendInvalidMessageContaining(string aBrokenMessage)
+        {
+            _currentChat.SendMessage(aBrokenMessage);
         }
 
         private void ReceivesAMessageMatching(string sniperId, IResolveConstraint messageMatcher)

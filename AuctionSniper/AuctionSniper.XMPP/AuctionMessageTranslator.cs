@@ -1,10 +1,11 @@
 using System;
 using System.Collections.Generic;
 using AuctionSniper.Domain;
+using Infrastructure.XMPP;
 
 namespace AuctionSniper.XMPP
 {
-    public class AuctionMessageTranslator
+    public class AuctionMessageTranslator : IChatListener
     {
         private readonly string _sniperId;
 
@@ -17,6 +18,18 @@ namespace AuctionSniper.XMPP
         }
 
         public void ProcessMessage(Chat chat, Message message)
+        {
+            try
+            {
+                Translate(message);
+            }
+            catch (Exception)
+            {
+                _listener.AuctionFailed();
+            }
+        }
+
+        private void Translate(Message message)
         {
             var @event = AuctionEvent.From(message.Body);
             var type = @event.Type;

@@ -52,7 +52,7 @@ namespace AuctionSniper.Tests.Acceptance
         {
             _application.Close();
             _application.Dispose();
-            Thread.Sleep(100);
+            Thread.Sleep(250);
         }
 
         public void ShowsSniperHasLostAuction(FakeAuctionServer auction, int lastPrice, int lastBid)
@@ -78,6 +78,16 @@ namespace AuctionSniper.Tests.Acceptance
         public void HasShownSniperIsLosing(FakeAuctionServer auction, int lastPrice, int lastBid)
         {
             _driver.ShowsSniperStatus(auction.ItemId, lastPrice, lastBid, SnipersTableModel.TextFor(SniperState.Losing));
+        }
+
+        public void ShowsSniperHasFailed(FakeAuctionServer auction)
+        {
+            _driver.ShowsSniperStatus(auction.ItemId, 0, 0, SnipersTableModel.TextFor(SniperState.Failed));
+        }
+
+        public void ReportsInvalidMessage(FakeAuctionServer auction, string aBrokenMessage)
+        {
+            //TODO...
         }
     }
 }
